@@ -2,15 +2,23 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<AssemblyName>BBP$(MSBuildProjectName)</AssemblyName>
-		<RootNamespace>LuisRandomness.BBP$(MSBuildProjectName)</RootNamespace>
+		<AssemblyName>UcL_$(MSBuildProjectName)</AssemblyName>
+		<RootNamespace>UncertainLuei.BaldiPlus.$(MSBuildProjectName)</RootNamespace>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BepInEx.AssemblyPublicizer" Version="0.4.2" />
+		<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
 	<ItemGroup>
 		<Reference Include="0Harmony">
 			<HintPath>..\Dependencies\0Harmony.dll</HintPath>
 		</Reference>
-		<Reference Include="Assembly-CSharp">
+		<Reference Include="Assembly-CSharp" Publicize="true">
 			<HintPath>..\Dependencies\Assembly-CSharp.dll</HintPath>
 		</Reference>
 		<Reference Include="BepInEx">
@@ -60,9 +68,6 @@
 		</Reference>
 		<Reference Include="Rewired_Core">
 			<HintPath>..\Dependencies\Rewired_Core.dll</HintPath>
-		</Reference>
-		<Reference Include="Rewired_Windows">
-			<HintPath>..\Dependencies\Rewired_Windows.dll</HintPath>
 		</Reference>
 		<Reference Include="System.Configuration">
 			<HintPath>..\Dependencies\System.Configuration.dll</HintPath>

@@ -7,19 +7,21 @@ using MTM101BaldAPI.OptionsAPI;
 using MTM101BaldAPI.Reflection;
 using MTM101BaldAPI.Registers;
 using MTM101BaldAPI.UI;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace LuisRandomness.BBPAuxiliaryModUi
+namespace UncertainLuei.BaldiPlus.ModsUi
 {
     [BepInPlugin(ModGuid, "Auxiliary Mod UI", ModVersion)]
     [BepInDependency("mtm101.rulerp.bbplus.baldidevapi", BepInDependency.DependencyFlags.HardDependency)]
     public class ModUiPlugin : BaseUnityPlugin
     {
-        public const string ModGuid = "io.github.luisrandomness.auxiliarymodui";
+        public const string ModGuid = "io.github.uncertain_luei.baldiplus.modsui";
         public const string ModVersion = "2024.1.0.0";
 
         internal static List<ModEntry> modEntries = new List<ModEntry>();
@@ -35,7 +37,7 @@ namespace LuisRandomness.BBPAuxiliaryModUi
 
             InitConfigValues();
 
-            LoadingEvents.RegisterOnAssetsLoaded(OnLoadPost, true);
+            LoadingEvents.RegisterOnAssetsLoaded(Info, LoadAssets(), true);
 
             new Harmony(ModGuid).PatchAllConditionals();
         }
@@ -57,10 +59,16 @@ namespace LuisRandomness.BBPAuxiliaryModUi
         {
         }
 
-        void OnLoadPost()
+        IEnumerator LoadAssets()
         {
+            yield return 3;
+            
+            yield return "Grabbing all available mods";
+
             // Guarantees it'll run when all mods are loaded
             GrabAllModEntries();
+
+            yield return "Loading assets";
 
             assetMan.Add("ModsButton", AssetLoader.SpriteFromTexture2D(AssetLoader.TextureFromMod(this, "MenuButton", "Mods_Unlit.png"), 100f));
             assetMan.Add("ModsButtonHighlight", AssetLoader.SpriteFromTexture2D(AssetLoader.TextureFromMod(this, "MenuButton", "Mods_Lit.png"), 100f));
@@ -75,6 +83,8 @@ namespace LuisRandomness.BBPAuxiliaryModUi
             assetMan.Add("Btn_Website", AssetLoader.SpriteFromTexture2D(AssetLoader.TextureFromMod(this, "ModUi", "Buttons", "Website.png"), 100f));
             assetMan.Add("Btn_Issues", AssetLoader.SpriteFromTexture2D(AssetLoader.TextureFromMod(this, "ModUi", "Buttons", "Issues.png"), 100f));
             assetMan.Add("Btn_License", AssetLoader.SpriteFromTexture2D(AssetLoader.TextureFromMod(this, "ModUi", "Buttons", "License.png"), 100f));
+
+            yield return "Creating UI";
 
             OptionsMenu options = Resources.FindObjectsOfTypeAll<OptionsMenu>()?.FirstOrDefault();
             options = Instantiate(options);
@@ -99,8 +109,11 @@ namespace LuisRandomness.BBPAuxiliaryModUi
                     Destroy(child.gameObject);
                     continue;
                 }
+            }
 
-                foreach (Transform child2 in child)
+            Transform baseCanvas = optTransform.GetChild(0);
+
+            foreach (Transform child2 in baseCanvas)
                 {
                     if (child2.name == "BackButton")
                         continue;
@@ -113,10 +126,10 @@ namespace LuisRandomness.BBPAuxiliaryModUi
                     child2.GetComponent<Image>().sprite = assetMan.Get<Sprite>("Bg");
                 }
 
-                TMP_Text txt = UIHelpers.CreateText<TextMeshProUGUI>(BaldiFonts.BoldComicSans24, "Mod Name", child, new Vector3(112f, 160f));
-                txt.name = "Info_Name";
-                txt.rectTransform.sizeDelta = new Vector2(240f,36f);
-                txt.enableAutoSizing = true;
+            TMP_Text txt = UIHelpers.CreateText<TextMeshProUGUI>(BaldiFonts.BoldComicSans24, "Mod Name", baseCanvas, new Vector3(112f, 160f));
+            txt.name = "Info_Name";
+            txt.rectTransform.sizeDelta = new Vector2(240f,36f);
+            txt.enableAutoSizing = true;
                 txt.fontSizeMax = 24f;
                 txt.fontSizeMin = 18f;
                 txt.overflowMode = TextOverflowModes.Ellipsis;
@@ -124,21 +137,21 @@ namespace LuisRandomness.BBPAuxiliaryModUi
                 txt.color = Color.black;
                 menu.infName = txt;
 
-                txt = UIHelpers.CreateText<TextMeshProUGUI>(BaldiFonts.ComicSans12, "v0.0.0.0, No License", child, new Vector3(112f, 140f));
+                txt = UIHelpers.CreateText<TextMeshProUGUI>(BaldiFonts.ComicSans12, "v0.0.0.0, No License", baseCanvas, new Vector3(112f, 140f));
                 txt.name = "Info_Version";
                 txt.rectTransform.sizeDelta = new Vector2(240f,24f);
                 txt.alignment = TextAlignmentOptions.Left;
                 txt.color = Color.black;
                 menu.infVer = txt;
 
-                txt = Instantiate(txt, child);
+                txt = Instantiate(txt, baseCanvas);
                 txt.name = "Info_Guid";
                 txt.text = "Info_Guid";
                 txt.rectTransform.anchoredPosition = new Vector2(112f, 124f);
                 txt.color = Color.gray;
                 menu.infGuid = txt;
 
-                txt = Instantiate(txt, child);
+                txt = Instantiate(txt, baseCanvas);
                 txt.name = "Info_Credits";
                 txt.text = "Info_Credits";
                 txt.rectTransform.sizeDelta = new Vector2(240f,56f);
@@ -147,7 +160,7 @@ namespace LuisRandomness.BBPAuxiliaryModUi
                 txt.color = Color.black;
                 menu.infCredit = txt;
 
-                txt = Instantiate(txt, child);
+                txt = Instantiate(txt, baseCanvas);
                 txt.name = "Info_About";
 
                 // PLACEHOLDER TEXT, JUST SO I CAN TEST THIS
@@ -157,11 +170,19 @@ namespace LuisRandomness.BBPAuxiliaryModUi
                 txt.rectTransform.sizeDelta = new Vector2(240f, 192f);
                 txt.rectTransform.anchoredPosition = new Vector2(112f, -80f);
                 menu.infAbout = txt;
-            }
 
-            DontDestroyOnLoad(optMenu);
+            GameObject modBtnObj = new GameObject("ModButton", typeof(RectTransform), typeof(Image), typeof(StandardMenuButton));
+            RectTransform rectTransform = (RectTransform)modBtnObj.transform;
+            rectTransform.sizeDelta = new Vector2(200f, 48f);
+            rectTransform.anchoredPosition = new Vector2(-138f, 60f);
+            rectTransform.SetParent(baseCanvas,false);
+
+            StandardMenuButton modButton = modBtnObj.GetComponent<StandardMenuButton>();
+
+            optMenu.ConvertToPrefab(true);
 
             assetMan.Add("ModsMenu", menu);
+            yield break;
         }
     }
 

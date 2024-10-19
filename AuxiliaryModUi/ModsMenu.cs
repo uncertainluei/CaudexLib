@@ -9,7 +9,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace LuisRandomness.BBPAuxiliaryModUi
+namespace UncertainLuei.BaldiPlus.ModsUi
 {
     public class ModsListMenu : Singleton<ModsListMenu>
     {
@@ -24,15 +24,13 @@ namespace LuisRandomness.BBPAuxiliaryModUi
         private byte currentPage = 0;
         private ModEntry currentEntry;
 
-        protected override void AwakeFunction()
+        public override void AwakeFunction()
         {
             StandardMenuButton backButton = transform.Find("Base/BackButton").GetComponent<StandardMenuButton>();
 
             // Override back button's current events with our desired functionality
             backButton.OnPress = new UnityEvent();
             backButton.OnPress.AddListener(Close);
-
-            UpdateModPage(ModUiPlugin.modEntries[Mathf.FloorToInt(UnityEngine.Random.value * ModUiPlugin.modEntries.Count)]);
         }
 
         private void UpdateModPage(ModEntry entry)
@@ -49,7 +47,6 @@ namespace LuisRandomness.BBPAuxiliaryModUi
             infAbout.text = currentEntry.description;
         }
 
-
         public static void Open(GameObject canvas)
         {
             canvas.SetActive(false);
@@ -58,6 +55,8 @@ namespace LuisRandomness.BBPAuxiliaryModUi
             {
                 Instance.lastMenu = canvas;
                 Instance.gameObject.SetActive(true);
+                Instance.UpdateModPage(ModUiPlugin.modEntries[Mathf.FloorToInt(UnityEngine.Random.value * ModUiPlugin.modEntries.Count)]);
+
                 return;
             }
 
@@ -67,7 +66,8 @@ namespace LuisRandomness.BBPAuxiliaryModUi
             ModsListMenu newMenu = ModUiPlugin.assetMan.Get<ModsListMenu>("ModsMenu");
             newMenu = Instantiate(newMenu);
             newMenu.lastMenu = canvas;
-            newMenu.gameObject.SetActive(true);
+
+            newMenu.UpdateModPage(ModUiPlugin.modEntries[Mathf.FloorToInt(UnityEngine.Random.value * ModUiPlugin.modEntries.Count)]);
         }
 
         private void Close()
@@ -94,7 +94,7 @@ namespace LuisRandomness.BBPAuxiliaryModUi
         public string guid;
         public string version;
 
-        public string license = "No License";
+        public string license = "License unset";
         public string description = "No description set.";
 
         public string authors = "";
