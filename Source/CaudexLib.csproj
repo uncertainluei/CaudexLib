@@ -1,0 +1,89 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		
+		<AssemblyName>UncertainLuei.$(MSBuildProjectName)</AssemblyName>
+		<RootNamespace>UncertainLuei.$(MSBuildProjectName)</RootNamespace>
+		
+		<Version>0.1</Version>
+		<FileVersion>$(Version)</FileVersion>
+		<ProductVersion>$(Version)</ProductVersion>
+		
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<LangVersion>latest</LangVersion>
+		<NoWarn>1701;1702;IDE0017;IDE0051</NoWarn>
+
+		<RestoreAdditionalProjectSources>
+			https://api.nuget.org/v3/index.json;
+			https://nuget.bepinex.dev/v3/index.json;
+			https://nuget.samboy.dev/v3/index.json
+		</RestoreAdditionalProjectSources>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="../Resources/Embedded/**/*">
+			<LogicalName>$([System.String]::new('%(RelativeDir)').Replace('\','/').Substring(22))%(FileName)%(Extension)</LogicalName>
+		</EmbeddedResource>
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+		<PackageReference Include="BepInEx.Core" Version="5.*" />
+		<PackageReference Include="Hamunii.BepInEx.AutoPlugin" Version="2.*" />
+		<PackageReference Include="UnityEngine.Modules" Version="2020.3.38" IncludeAssets="compile" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+
+		<PackageReference Include="BepInEx.AssemblyPublicizer" Version="0.4.2" />
+		<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="Assembly-CSharp" Publicize="true">
+			<HintPath>..\Dependencies\Assembly-CSharp.dll</HintPath>
+		</Reference>
+		
+		<Reference Include="PineDebug">
+			<HintPath>..\Dependencies\PineDebug.dll</HintPath>
+		</Reference>
+		<Reference Include="AnalogFeelings.CharacterRadar" Publicize="true">
+			<HintPath>..\Dependencies\AnalogFeelings.CharacterRadar.dll</HintPath>
+		</Reference>
+		<Reference Include="BBPlusCustomMusics" Publicize="true">
+			<HintPath>..\Dependencies\BBPlusCustomMusics.dll</HintPath>
+		</Reference>
+		<Reference Include="BBPlusAnimations" Publicize="true">
+			<HintPath>..\Dependencies\BBPlusAnimations.dll</HintPath>
+		</Reference>
+		<Reference Include="BaldisBasicsPlusAdvanced" Publicize="true">
+			<HintPath>..\Dependencies\BaldisBasicsPlusAdvanced.dll</HintPath>
+		</Reference>
+		
+		<Reference Include="thinkerAPI" Publicize="true">
+			<HintPath>..\Dependencies\thinkerAPI.dll</HintPath>
+		</Reference>
+		
+		<Reference Include="PlusLevelLoader">
+			<HintPath>..\Dependencies\PlusLevelLoader.dll</HintPath>
+		</Reference>
+		<Reference Include="PlusLevelFormat">
+			<HintPath>..\Dependencies\PlusLevelFormat.dll</HintPath>
+		</Reference>
+		<Reference Include="BaldiLevelEditor">
+			<HintPath>..\Dependencies\BaldiLevelEditor.dll</HintPath>
+		</Reference>
+		
+		<Reference Include="MTM101BaldAPI" Publicize="true">
+			<HintPath>..\Dependencies\MTM101BaldAPI.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.UI">
+			<HintPath>..\Dependencies\UnityEngine.UI.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.TextMeshPro">
+			<HintPath>..\Dependencies\Unity.TextMeshPro.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+</Project>

@@ -1,4 +1,6 @@
-﻿using BepInEx;
+﻿
+#if false
+using BepInEx;
 using BepInEx.Bootstrap;
 using MTM101BaldAPI;
 using MTM101BaldAPI.AssetTools;
@@ -109,3 +111,4 @@ namespace UncertainLuei.BaldiPlus.ModsUi
         }
     }
 }
+#endif
