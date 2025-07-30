@@ -38,16 +38,16 @@ namespace UncertainLuei.CaudexLib.Patches
                 SceneManager.LoadScene(__0.scene);
             return false;
         }
-    }
 
-    internal sealed class ThinkerApiWarningLoader : MonoBehaviour
-    {
-        internal string targetScene;
-
-        private void Update()
+        private sealed class ThinkerApiWarningLoader : MonoBehaviour
         {
-            if (thinkerAPI.warningScreenBlockers <= 0 && !thinkerAPI.givemeaheadstart)
-                SceneManager.LoadScene(targetScene);
+            internal string targetScene;
+
+            private void Update()
+            {
+                if (thinkerAPI.warningScreenBlockers <= 0 && !thinkerAPI.givemeaheadstart)
+                    SceneManager.LoadScene(targetScene);
+            }
         }
     }
 }

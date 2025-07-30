@@ -11,7 +11,7 @@ using System.Collections;
 using UncertainLuei.CaudexLib.Registers;
 using UncertainLuei.CaudexLib.Registers.ModuleSystem;
 using UncertainLuei.CaudexLib.Util;
-
+using UncertainLuei.CaudexLib.Util.Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -62,6 +62,9 @@ namespace UncertainLuei.CaudexLib
                 if (plug == Info) continue;
                 CaudexModuleLoader.GetModulesFromPlugin(plug);
             }
+
+            Logger.LogDebug("Running queued Harmony actions");
+            CaudexHarmonyExtensions.RunQueuedActions();
 
             if (displayLogos)
                 timer.StartLogoDisplay();

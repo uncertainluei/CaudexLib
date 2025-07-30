@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Reflection;
 
+using BepInEx;
+using BepInEx.Bootstrap;
 using BepInEx.Configuration;
 
-using MTM101BaldAPI.Registers;
-
-using BepInEx.Bootstrap;
-using BepInEx;
 using MTM101BaldAPI;
-using System.ComponentModel.Design;
+using MTM101BaldAPI.Registers;
 
 namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
 {
@@ -87,6 +85,8 @@ namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
         {
             if (!Enabled) return;
 
+            if (!CaudexModuleLoader.pluginModules.ContainsKey(Info.Plugin))
+                CaudexModuleLoader.pluginModules.Add(Info.Plugin, []);
             CaudexModuleLoader.pluginModules[Info.Plugin].Add(this);
 
             MethodInfo[] methods = GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);

@@ -23,9 +23,6 @@ namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
 
         internal static void GetModulesFromPlugin(PluginInfo plug)
         {
-            // Add empty list to plugin-module dictionary
-            pluginModules.Add(plug, []);
-
             Assembly assembly = plug.Instance.GetType().Assembly;
 
             /* Allows Caudex Lib's module system to grab the first loaded plugin in the assembly
@@ -36,7 +33,8 @@ namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
                 pluginsFromAssembly.Add(assembly, plug);
                 GetModulesFromAssembly(assembly);
             }
-            if (pluginModules[plug].Count == 0) return;
+            if (!pluginModules.ContainsKey(plug))
+                return;
 
             foreach (LoadingEventOrder order in loadEventOrders)
             {
