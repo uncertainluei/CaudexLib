@@ -22,7 +22,7 @@ namespace UncertainLuei.CaudexLib
     [BepInDependency("thinkerAPI", BepInDependency.DependencyFlags.SoftDependency)]
     public partial class CaudexLibPlugin : BaseUnityPlugin
     {
-        private const string ModGuid = "io.github.uncertain_luei.caudexlib";
+        private const string ModGuid = "io.github.uncertainluei.caudexlib";
         private const string ApiGuid = "mtm101.rulerp.bbplus.baldidevapi";
 
         internal static CaudexLibPlugin Plugin { get; private set; }

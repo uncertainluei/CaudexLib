@@ -6,5 +6,10 @@ namespace UncertainLuei.CaudexLib.Registers
 {
     public static class CaudexEvents
     {
+        public delegate void ItemUseEvent(ItemManager im, ItemObject itm);
+        public static event ItemUseEvent OnItemUse;
+
+        internal static void ItemUsed(ItemManager im, ItemObject itm)
+            => OnItemUse?.Invoke(im, itm);
     }
 }

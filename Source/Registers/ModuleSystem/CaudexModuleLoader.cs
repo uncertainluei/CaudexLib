@@ -1,5 +1,5 @@
 ﻿using BepInEx;
-
+using HarmonyLib;
 using MTM101BaldAPI;
 using MTM101BaldAPI.Registers;
 
@@ -50,11 +50,19 @@ namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
         {
             Type moduleType = typeof(AbstractCaudexModule);
 
-            Type[] types = assembly.GetExportedTypes();
+            Type[] types;
+            try
+            {
+                types = assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                types = ex.Types.Where((Type type) => type != null).ToArray();
+            }
             foreach (Type type in types)
             {
                 if (!type.IsSubclassOf(moduleType)) continue;
-                if (type.GetCustomAttributes(typeof(CaudexModule),true).Length == 0) continue;
+                if (type.GetCustomAttributes(typeof(CaudexModule), true).Length == 0) continue;
                 AbstractCaudexModule newModule = (AbstractCaudexModule)Activator.CreateInstance(type);
                 newModule.TryInitialize();
             }
@@ -62,7 +70,6 @@ namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
 
         private static IEnumerator LoadModules(PluginInfo plug, AbstractCaudexModule[] modules, LoadingEventOrder order)
         {
-            Debug.Log(modules.Length);
             yield return modules.Length;
             foreach (AbstractCaudexModule module in modules)
             {

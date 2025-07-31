@@ -6,12 +6,14 @@ using System.Reflection.Emit;
 
 using HarmonyLib;
 using MTM101BaldAPI.Registers;
+using UncertainLuei.CaudexLib.Objects;
+using UncertainLuei.CaudexLib.Registers;
 using UncertainLuei.CaudexLib.Util.Extensions;
 
 namespace UncertainLuei.CaudexLib.Patches
 {
     [HarmonyPatch]
-    public static class ExtendedItemTooltipPatches
+    public static class ItemTooltipPatches
     {
         private static readonly FieldInfo nameKeyField = AccessTools.Field(typeof(ItemObject), "nameKey");
         private static readonly MethodInfo getNameMethod = AccessTools.Method(typeof(ItemObjectExtensions), "GetName");
@@ -45,7 +47,7 @@ namespace UncertainLuei.CaudexLib.Patches
                 yield return new CodeInstruction(OpCodes.Call, replacement);
             }
             if (patches == 0)
-                CaudexLibPlugin.Log.LogError("ExtendedItemPatches.ReplaceReferences transpiler did not find anything to patch!");
+                CaudexLibPlugin.Log.LogError("ItemTooltipPatches.ReplaceReferences transpiler did not find anything to patch!");
         }
 
         private static readonly object localeManagerInstance = AccessTools.PropertyGetter(typeof(LocalizationManager), "Instance");
@@ -89,9 +91,11 @@ namespace UncertainLuei.CaudexLib.Patches
                 yield return array[i];
             }
             if (patches == 0)
-                CaudexLibPlugin.Log.LogError("ExtendedItemPatches.ReplaceDirectLocalization transpiler did not find anything to patch!");
+                CaudexLibPlugin.Log.LogError("ItemTooltipPatches.ReplaceDirectLocalization transpiler did not find anything to patch!");
         }
 
+        [HarmonyPatch(typeof(HudManager), "SetItemSelect"), HarmonyTranspiler]
+        //[HarmonyPatch(typeof(TooltipController), "ActualUpdateTooltip")]
         internal static IEnumerable<CodeInstruction> RemoveLocalizers(this IEnumerable<CodeInstruction> instructions)
         {
             CodeInstruction[] array = instructions.ToArray();
@@ -115,7 +119,7 @@ namespace UncertainLuei.CaudexLib.Patches
                             patches++;
                             foreach (CodeInstruction ins in insideInstructs)
                                 yield return ins;
-                            i = j;
+                            i = j+1;
                             continue;
                         }
                         insideInstructs.Add(array[j]);
@@ -124,7 +128,7 @@ namespace UncertainLuei.CaudexLib.Patches
                 yield return array[i];
             }
             if (patches == 0)
-                CaudexLibPlugin.Log.LogError("ExtendedItemPatches.ReplaceDirectLocalization transpiler did not find anything to patch!");
+                CaudexLibPlugin.Log.LogError("ItemTooltipPatches.ReplaceDirectLocalization transpiler did not find anything to patch!");
         }
 
         [HarmonyPatch(typeof(ItemManager), "UpdateSelect"), HarmonyTranspiler]
@@ -144,59 +148,5 @@ namespace UncertainLuei.CaudexLib.Patches
         [HarmonyPatch(typeof(StoreScreen), "UpdateDescription"), HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> BaseReplacementDescs(IEnumerable<CodeInstruction> instructions)
             => instructions.ReplaceDirectLocalization(descKeyField, getDescMethod);
-    }
-
-
-    [HarmonyPatch(typeof(ItemManager), nameof(ItemManager.UseItem))]
-    internal static class ExtendedItemUsePatch
-    {
-        private static void ItemUseSuccess(ItemManager im, int selectedItm)
-            => im.items[selectedItm].OnUseSuccess(im);
-
-        private static bool MultiItemExtraCheck(Item itm, PlayerManager pm)
-        {
-            // Item that is being used
-            ItemObject itmObj = pm.itm.items[pm.itm.selectedItem];
-
-            // Return true and end if Use function is true
-            if (itm.Use(pm))
-                return true;
-
-            return itmObj != pm.itm.items[pm.itm.selectedItem];
-        }
-
-        private static readonly MethodInfo multiItemCheck = AccessTools.Method(typeof(ExtendedItemUsePatch), "MultiItemExtraCheck");
-        private static readonly MethodInfo itemUsedMethod = AccessTools.Method(typeof(ExtendedItemUsePatch), "ItemUseSuccess");
-
-        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            CodeInstruction[] array = instructions.ToArray();
-            int length = array.Length, i = 0;
-            bool patched = false;
-
-            for (; i < length; i++)
-            {
-                if (!patched &&
-                    i+2 < length &&
-                    array[i].opcode == OpCodes.Callvirt &&
-                    array[i+1].opcode == OpCodes.Brfalse &&
-                    array[i+2].opcode == OpCodes.Ldarg_0)
-                {
-                    patched = true;
-                    yield return new CodeInstruction(OpCodes.Call, multiItemCheck);
-                    yield return array[i+1];
-                    yield return array[i+2];
-                    yield return array[i+3];
-                    yield return array[i+4];
-                    yield return new CodeInstruction(OpCodes.Call, itemUsedMethod);
-                    i += 6;
-                    for (; i < length-1; i++)
-                        yield return new CodeInstruction(OpCodes.Nop);
-                }
-                yield return array[i];
-            }
-            if (!patched)
-                CaudexLibPlugin.Log.LogError("ExtendedItemUsePatch.Transpiler transpiler did not get properly applied!");
-        }
     }
 }

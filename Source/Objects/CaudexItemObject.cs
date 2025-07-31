@@ -28,7 +28,7 @@ namespace UncertainLuei.CaudexLib.Objects
 
         public override void OnUseSuccess(ItemManager im)
         {
-            if (nextStage == null)
+            if (nextStage != null)
             {
                 im.SetItem(nextStage, im.selectedItem);
                 return;

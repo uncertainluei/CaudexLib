@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BepInEx;
 using MTM101BaldAPI.Registers;
 using UncertainLuei.CaudexLib.Objects;
 
@@ -7,9 +8,12 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
 {
     public static class ItemObjectExtensions
     {
-        public delegate bool ItemStringOverride(ItemObject itm, bool localized, out string newVal);
+        public static void AddNameOverride(this ItemMetaData itm, Func<ItemObject, bool, string> stringOverride)
+            => AddStringOverride(itm, stringOverride, ref nameOverrides);
+        public static void AddDescOverride(this ItemMetaData itm, Func<ItemObject, bool, string> stringOverride)
+            => AddStringOverride(itm, stringOverride, ref descOverrides);
 
-        private static void AddNameOverride(ItemMetaData itm, ItemStringOverride stringOverride, ref Dictionary<ItemMetaData, List<ItemStringOverride>> dict)
+        private static void AddStringOverride(ItemMetaData itm, Func<ItemObject, bool, string> stringOverride, ref Dictionary<ItemMetaData, List<Func<ItemObject, bool, string>>> dict)
         {
             if (!dict.ContainsKey(itm))
                 dict.Add(itm, []);
@@ -17,10 +21,10 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
             dict[itm].Add(stringOverride);
         }
 
-        private static Dictionary<ItemMetaData, List<ItemStringOverride>> nameOverrides = [];
-        private static Dictionary<ItemMetaData, List<ItemStringOverride>> descOverrides = [];
+        private static Dictionary<ItemMetaData, List<Func<ItemObject, bool, string>>> nameOverrides = [];
+        private static Dictionary<ItemMetaData, List<Func<ItemObject, bool, string>>> descOverrides = [];
 
-        private static bool TryGetOverride(this ItemObject itm, ref Dictionary<ItemMetaData, List<ItemStringOverride>> dict, bool localized, out string newVal)
+        private static bool TryGetOverride(this ItemObject itm, ref Dictionary<ItemMetaData, List<Func<ItemObject, bool, string>>> dict, bool localized, out string newVal)
         {
             newVal = null;
             ItemMetaData meta = itm.GetMeta();
@@ -32,7 +36,8 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
 
             for (int i = dict[meta].Count-1; i >= 0; i++)
             {
-                if (!dict[meta][i](itm, localized, out string val)) continue;
+                string val = dict[meta][i](itm, localized);
+                if (val.IsNullOrWhiteSpace()) continue;
                 newVal = val;
                 return true;
             }
@@ -67,13 +72,18 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
 
         public static void OnUseSuccess(this ItemObject itm, ItemManager im)
         {
-            CaudexLibPlugin.Log.LogError("Succesfully Overridden!!");
             if (itm is CaudexItemObject cItm)
             {
                 cItm.OnUseSuccess(im);
                 return;
             }
             CaudexItemObject.DefaultOnUseSuccess(im);
+        }
+
+        public static void SetFunctionAcrossMeta(this ItemObject itm, Item func)
+        {
+            foreach (ItemObject itmObj in itm.GetMeta().itemObjects)
+                itmObj.item = func;
         }
     }
 }
