@@ -81,9 +81,7 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
                 itmObj.name = $"{objName}_{itmObj.stateNo}";
                 itmObj.nextStage = last;
 
-                CaudexLibPlugin.Log.LogWarning(i == stateCount - 1);
                 if (i == stateCount - 1) break;
-                CaudexLibPlugin.Log.LogWarning("Created new");
 
                 last = itmObj;
                 itmObj = ScriptableObject.Instantiate(itmObj);

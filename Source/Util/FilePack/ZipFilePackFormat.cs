@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Compression;
 using System.Text;
+using MTM101BaldAPI.AssetTools;
 
 namespace UncertainLuei.CaudexLib.Util.FilePack
 {
@@ -50,7 +51,7 @@ namespace UncertainLuei.CaudexLib.Util.FilePack
         public override string Name => name;
         public override string FullName => fullName;
 
-        public override string ReadAllText() => entry.Open().AsString();
-        public override byte[] ReadAllBytes() => entry.Open().AsByteArray();
+        public override string ReadAllText() => entry.Open().ToTextString();
+        public override byte[] ReadAllBytes() => entry.Open().ToByteArray();
     }
 }

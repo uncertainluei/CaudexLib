@@ -23,7 +23,7 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="../Resources/Embedded/**/*">
-			<LogicalName>$([System.String]::new('%(RelativeDir)').Replace('\','/').Substring(22))%(FileName)%(Extension)</LogicalName>
+			<LogicalName>$([System.String]::new('%(RelativeDir)').Replace('/','/').Substring(22))%(FileName)%(Extension)</LogicalName>
 		</EmbeddedResource>
 	</ItemGroup>
 	
@@ -43,47 +43,21 @@
 
 	<ItemGroup>
 		<Reference Include="Assembly-CSharp" Publicize="true">
-			<HintPath>..\Dependencies\Assembly-CSharp.dll</HintPath>
+			<HintPath>../Dependencies/Assembly-CSharp.dll</HintPath>
 		</Reference>
-		
-		<Reference Include="PineDebug">
-			<HintPath>..\Dependencies\PineDebug.dll</HintPath>
-		</Reference>
-		<Reference Include="AnalogFeelings.CharacterRadar" Publicize="true">
-			<HintPath>..\Dependencies\AnalogFeelings.CharacterRadar.dll</HintPath>
-		</Reference>
-		<Reference Include="BBPlusCustomMusics" Publicize="true">
-			<HintPath>..\Dependencies\BBPlusCustomMusics.dll</HintPath>
-		</Reference>
-		<Reference Include="BBPlusAnimations" Publicize="true">
-			<HintPath>..\Dependencies\BBPlusAnimations.dll</HintPath>
-		</Reference>
-		<Reference Include="BaldisBasicsPlusAdvanced" Publicize="true">
-			<HintPath>..\Dependencies\BaldisBasicsPlusAdvanced.dll</HintPath>
-		</Reference>
-		
-		<Reference Include="thinkerAPI" Publicize="true">
-			<HintPath>..\Dependencies\thinkerAPI.dll</HintPath>
-		</Reference>
-		
-		<Reference Include="PlusLevelLoader">
-			<HintPath>..\Dependencies\PlusLevelLoader.dll</HintPath>
-		</Reference>
-		<Reference Include="PlusLevelFormat">
-			<HintPath>..\Dependencies\PlusLevelFormat.dll</HintPath>
-		</Reference>
-		<Reference Include="BaldiLevelEditor">
-			<HintPath>..\Dependencies\BaldiLevelEditor.dll</HintPath>
-		</Reference>
-		
+
 		<Reference Include="MTM101BaldAPI" Publicize="true">
-			<HintPath>..\Dependencies\MTM101BaldAPI.dll</HintPath>
+			<HintPath>../Dependencies/MTM101BaldAPI.dll</HintPath>
 		</Reference>
+		<Reference Include="thinkerAPI" Publicize="true">
+			<HintPath>../Dependencies/thinkerAPI.dll</HintPath>
+		</Reference>		
+		
 		<Reference Include="UnityEngine.UI">
-			<HintPath>..\Dependencies\UnityEngine.UI.dll</HintPath>
+			<HintPath>../Dependencies/UnityEngine.UI.dll</HintPath>
 		</Reference>
 		<Reference Include="Unity.TextMeshPro">
-			<HintPath>..\Dependencies\Unity.TextMeshPro.dll</HintPath>
+			<HintPath>../Dependencies/Unity.TextMeshPro.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 </Project>

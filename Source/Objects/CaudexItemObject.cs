@@ -5,10 +5,12 @@ namespace UncertainLuei.CaudexLib.Objects
     public class CaudexItemObject : ItemObject
     {
         public virtual string LocalizedName => UnlocalizedName.Localize();
-        public virtual string UnlocalizedName => nameKey;
+        public string UnlocalizedName => this.GetName(false);
+        public virtual string NameKey => nameKey;
 
         public virtual string LocalizedDesc => UnlocalizedDesc.Localize();
-        public virtual string UnlocalizedDesc => descKey;
+        public string UnlocalizedDesc => this.GetDescription(false);
+        public virtual string DescKey => descKey;
 
         internal static void DefaultOnUseSuccess(ItemManager im)
         {

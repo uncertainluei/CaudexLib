@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using BepInEx;
-using MidiPlayerTK;
 using MTM101BaldAPI;
 using MTM101BaldAPI.AssetTools;
 using Newtonsoft.Json;
@@ -13,6 +12,18 @@ namespace UncertainLuei.CaudexLib.Util
 {
     public static class CaudexAssetLoader
     {
+        internal static Dictionary<PluginInfo, string> modPathOverrides = [];
+        
+        // Overrides name of the assets folder from plugin GUID to a custom path, supports subfolders
+        public static void SetAssetsDirectory(this BaseUnityPlugin plug, params string[] vals)
+        {
+            string output = Path.Combine(Application.streamingAssetsPath, "Modded", Path.Combine(vals));
+            if (modPathOverrides.ContainsKey(plug.Info))
+                modPathOverrides[plug.Info] = output;
+            else
+                modPathOverrides.Add(plug.Info, output);
+        }
+
         public static void LocalizationFromFile(Language lang, string path)
             => AssetLoader.LocalizationFromFunction((target) => TryRunLocaleFunction(target, lang, () => DeserializeLocaleFromFile(path)));
 
@@ -21,7 +32,7 @@ namespace UncertainLuei.CaudexLib.Util
         public static void LocalizationFromEmbeddedResource(Language lang, string path)
             => LocalizationFromEmbeddedResource(lang, Assembly.GetCallingAssembly(), path);
 
-        // Equivalents utilising the old Mystman approach
+        // Equivalents utilising the vanilla Mystman approach
         public static void LocalizationFromEmbeddedVanilla(Language lang, Assembly assembly, string path)
             => AssetLoader.LocalizationFromFunction((target) => TryRunLocaleFunction(target, lang, () => DeserializeLocaleFromEmbedded(assembly, path)));
         public static void LocalizationFromEmbeddedVanilla(Language lang, string path)
@@ -41,7 +52,7 @@ namespace UncertainLuei.CaudexLib.Util
             if (assembly == null)
                 throw new ArgumentNullException("assembly");
             
-            return DeserializeLocalization(assembly.GetManifestResourceStream(path).AsString());
+            return DeserializeLocalization(assembly.GetManifestResourceStream(path).ToTextString());
         }
 
         // Vanilla localization equivalent
@@ -52,7 +63,7 @@ namespace UncertainLuei.CaudexLib.Util
 
             try
             {
-                LocalizationData localizationData = JsonUtility.FromJson<LocalizationData>(File.ReadAllText(path));
+                LocalizationData localizationData = JsonUtility.FromJson<LocalizationData>(assembly.GetManifestResourceStream(path).ToTextString());
                 Dictionary<string, string> localizedText = [];
                 foreach (LocalizationItem item in localizationData.items)
                 {
@@ -70,7 +81,7 @@ namespace UncertainLuei.CaudexLib.Util
         }
 
         // Loads localization files using a different format than the one used in Plus.
-        private static Dictionary<string,string> DeserializeLocalization(string data)
+        public static Dictionary<string,string> DeserializeLocalization(string data)
         {
             if (data.IsNullOrWhiteSpace())
                 throw new ArgumentNullException("data");
@@ -110,31 +121,7 @@ namespace UncertainLuei.CaudexLib.Util
             return array;
         }
 
-        public static byte[] AsByteArray(this Stream stream)
-        {
-            if (stream == null)
-            {
-                stream.Close();
-                throw new ArgumentNullException("stream");
-            }
-
-            byte[] bytes;
-            if (stream is MemoryStream ms)
-            {
-                bytes = ms.ToArray();
-                stream.Close();
-                return bytes;
-            }
-
-            MemoryStream newMs = new();
-            stream.CopyTo(newMs);
-            bytes = newMs.ToArray();
-            stream.Close();
-            newMs.Close();
-            return bytes;
-        }
-
-        public static string AsString(this Stream stream)
+        public static string ToTextString(this Stream stream)
         {
             if (stream == null)
             {
@@ -174,6 +161,6 @@ namespace UncertainLuei.CaudexLib.Util
             => AssetLoader.AudioClipFromFile(GetTemporaryFile(byteData, "AudioClip", name), format);
 
         public static Texture2D TextureFromEmbeddedResource(string path)
-            => Assembly.GetCallingAssembly().GetManifestResourceStream(path).AsByteArray().ToTexture2D(Path.GetFileNameWithoutExtension(path));
+            => Assembly.GetCallingAssembly().GetManifestResourceStream(path).ToByteArray().ToTexture2D(Path.GetFileNameWithoutExtension(path));
     }
 }

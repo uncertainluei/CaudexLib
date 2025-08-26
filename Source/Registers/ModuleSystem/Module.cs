@@ -130,7 +130,7 @@ namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
             foreach (LoadingEventOrder order in CaudexModuleLoader.loadEventOrders)
             {
                 if (!loadEvent.ShouldRun(order)) continue;
-
+                
                 if (!loadMethods.ContainsKey(order))
                     loadMethods.Add(order, []);
                 // Prevent additional triggers of the same method in the load event

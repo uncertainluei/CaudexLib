@@ -12,6 +12,7 @@ using UncertainLuei.CaudexLib.Registers;
 using UncertainLuei.CaudexLib.Registers.ModuleSystem;
 using UncertainLuei.CaudexLib.Util;
 using UncertainLuei.CaudexLib.Util.Extensions;
+using UncertainLuei.CaudexLib.Util.FilePack;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -33,8 +34,10 @@ namespace UncertainLuei.CaudexLib
             Plugin = this;
             Log = Logger;
 
-            SplashLogos.AddLogo(CaudexAssetLoader.TextureFromEmbeddedResource("uncertainluei_logo.png"));
-            CaudexAssetLoader.LocalizationFromEmbeddedResource(Language.English, "Subtitles_En.json");
+            SplashLogos.AddLogo(CaudexAssetLoader.TextureFromEmbeddedResource("Ui/Splashes/uncertainluei_logo.png"));
+            CaudexAssetLoader.LocalizationFromEmbeddedResource(Language.English, "Lang/English.json5");
+
+            FilePackReader.InitReadChecks(Info);
 
             new Harmony(ModGuid).PatchAllConditionals();
 
@@ -63,8 +66,8 @@ namespace UncertainLuei.CaudexLib
                 CaudexModuleLoader.GetModulesFromPlugin(plug);
             }
 
-            Logger.LogDebug("Running queued Harmony actions");
-            CaudexHarmonyExtensions.RunQueuedActions();
+            Logger.LogDebug("Running queued actions");
+            QueuedActions.RunQueuedActions();
 
             if (displayLogos)
                 timer.StartLogoDisplay();

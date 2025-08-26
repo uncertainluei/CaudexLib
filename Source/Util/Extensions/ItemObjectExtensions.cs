@@ -46,28 +46,24 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
 
         public static string GetName(this ItemObject itm, bool localized = true)
         {
-            if (itm is CaudexItemObject cItm)
-                return localized ? cItm.LocalizedName : cItm.UnlocalizedName;
             if (itm.TryGetOverride(ref nameOverrides, localized, out string newVal))
                 return newVal;
-
-            string name = itm.nameKey;
+            if (itm is CaudexItemObject cItm)
+                return localized ? cItm.LocalizedName : cItm.NameKey;
             if (localized)
-                name = name.Localize();
-            return name;
+                return itm.GetName(false).Localize();
+            return itm.nameKey;
         }
 
         public static string GetDescription(this ItemObject itm, bool localized = true)
         {
-            if (itm is CaudexItemObject cItm)
-                return localized ? cItm.LocalizedDesc : cItm.UnlocalizedDesc;
             if (itm.TryGetOverride(ref descOverrides, localized, out string newVal))
                 return newVal;
-
-            string desc = itm.descKey;
+            if (itm is CaudexItemObject cItm)
+                return localized ? cItm.LocalizedDesc : cItm.DescKey;
             if (localized)
-                desc = desc.Localize();
-            return desc;
+                return itm.GetDescription(false).Localize();
+            return itm.descKey;
         }
 
         public static void OnUseSuccess(this ItemObject itm, ItemManager im)

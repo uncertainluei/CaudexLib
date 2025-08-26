@@ -11,5 +11,11 @@ namespace UncertainLuei.CaudexLib.Registers
 
         internal static void ItemUsed(ItemManager im, ItemObject itm)
             => OnItemUse?.Invoke(im, itm);
+
+        public static event Action OnNotebookCollect;
+
+        internal static void NotebookCollected()
+            => OnNotebookCollect?.Invoke();
+
     }
 }
