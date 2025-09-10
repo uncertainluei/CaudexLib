@@ -19,7 +19,7 @@ namespace UncertainLuei.CaudexLib.Patches
             im.items[selectedItm].OnUseSuccess(im);
         }
 
-        private static bool MultiItemExtraCheck(Item itm, PlayerManager pm)
+        private static bool ExtendedItemUseCheck(Item itm, PlayerManager pm)
         {
             // Item that is being used
             ItemObject itmObj = pm.itm.items[pm.itm.selectedItem];
@@ -40,7 +40,7 @@ namespace UncertainLuei.CaudexLib.Patches
             return false;
         }
 
-        private static readonly MethodInfo multiItemCheck = AccessTools.Method(typeof(ItemUsePatch), "MultiItemExtraCheck");
+        private static readonly MethodInfo itemCheck = AccessTools.Method(typeof(ItemUsePatch), "ExtendedItemUseCheck");
         private static readonly MethodInfo itemUsedMethod = AccessTools.Method(typeof(ItemUsePatch), "ItemUseSuccess");
 
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -51,18 +51,18 @@ namespace UncertainLuei.CaudexLib.Patches
 
             for (; i < length; i++)
             {
-                if (!patched &&
+                if (!patched       &&
                     i + 2 < length &&
-                    array[i].opcode == OpCodes.Callvirt &&
-                    array[i + 1].opcode == OpCodes.Brfalse &&
-                    array[i + 2].opcode == OpCodes.Ldarg_0)
+                    array[i].opcode   == OpCodes.Callvirt &&
+                    array[i+1].opcode == OpCodes.Brfalse  &&
+                    array[i+2].opcode == OpCodes.Ldarg_0)
                 {
                     patched = true;
-                    yield return new CodeInstruction(OpCodes.Call, multiItemCheck);
-                    yield return array[i + 1];
-                    yield return array[i + 2];
-                    yield return array[i + 3];
-                    yield return array[i + 4];
+                    yield return new CodeInstruction(OpCodes.Call, itemCheck);
+                    yield return array[i+1];
+                    yield return array[i+2];
+                    yield return array[i+3];
+                    yield return array[i+4];
                     yield return new CodeInstruction(OpCodes.Call, itemUsedMethod);
                     i += 6;
                     for (; i < length - 1; i++)

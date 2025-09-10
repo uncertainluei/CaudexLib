@@ -33,7 +33,7 @@ namespace UncertainLuei.CaudexLib.Patches
 
             for (; i < length; i++)
             {
-                if (array[i].opcode != OpCodes.Ldfld ||
+                if (array[i].opcode  != OpCodes.Ldfld ||
                     array[i].operand != targetAsObj)
                 {
                     yield return array[i];
@@ -69,10 +69,10 @@ namespace UncertainLuei.CaudexLib.Patches
                     insideInstructs.Clear();
                     for (int j = i + 1; j < length && !found; j++)
                     {
-                        if (array[j].opcode == OpCodes.Ldfld &&
-                            array[j].operand == targetAsObj &&
-                            array[j + 1].opcode == OpCodes.Callvirt &&
-                            array[j + 1].operand == getLocaleTextInstance)
+                        if (array[j].opcode    == OpCodes.Ldfld     &&
+                            array[j].operand   == targetAsObj       &&
+                            array[j+1].opcode  == OpCodes.Callvirt  &&
+                            array[j+1].operand == getLocaleTextInstance)
                         {
                             found = true;
                             patches++;
@@ -110,7 +110,7 @@ namespace UncertainLuei.CaudexLib.Patches
                     insideInstructs.Clear();
                     for (int j = i+1; j < length && !found; j++)
                     {
-                        if (array[j].opcode == OpCodes.Callvirt &&
+                        if (array[j].opcode  == OpCodes.Callvirt &&
                             array[j].operand == getLocaleTextInstance)
                         {
                             found = true;

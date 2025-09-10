@@ -1,4 +1,5 @@
-﻿using BepInEx.Bootstrap;
+﻿using System.Collections;
+using BepInEx.Bootstrap;
 using HarmonyLib;
 
 using MTM101BaldAPI;
@@ -35,8 +36,14 @@ namespace UncertainLuei.CaudexLib.Patches
                     .GetComponent<ThinkerApiWarningLoader>().targetScene = __0.scene;
             }
             else
-                SceneManager.LoadScene(__0.scene);
+                __0.StartCoroutine(LoadSceneDelayed(__0.scene));
             return false;
+        }
+
+        private static IEnumerator LoadSceneDelayed(string target)
+        {
+            yield return new WaitWhile(() => AdditiveSceneManager.Instance.Busy);
+            AdditiveSceneManager.Instance.LoadScene(target);
         }
 
         private sealed class ThinkerApiWarningLoader : MonoBehaviour
@@ -46,7 +53,10 @@ namespace UncertainLuei.CaudexLib.Patches
             private void Update()
             {
                 if (thinkerAPI.warningScreenBlockers <= 0 && !thinkerAPI.givemeaheadstart)
-                    SceneManager.LoadScene(targetScene);
+                {
+                    StartCoroutine(LoadSceneDelayed(targetScene));
+                    enabled = false;
+                }
             }
         }
     }

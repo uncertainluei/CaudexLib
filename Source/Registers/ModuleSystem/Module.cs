@@ -89,7 +89,7 @@ namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
                 CaudexModuleLoader.pluginModules.Add(Info.Plugin, []);
             CaudexModuleLoader.pluginModules[Info.Plugin].Add(this);
 
-            MethodInfo[] methods = GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo[] methods = GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             ParameterInfo[] parameters;
             bool isSceneObject;
             foreach (MethodInfo method in methods)

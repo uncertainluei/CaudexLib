@@ -19,7 +19,7 @@ using UnityEngine.SceneManagement;
 namespace UncertainLuei.CaudexLib
 {
     [BepInAutoPlugin(ModGuid, "Caudex Lib")]
-    [BepInDependency(ApiGuid, "8.2.1")]
+    [BepInDependency(ApiGuid, "9.0")]
     [BepInDependency("thinkerAPI", BepInDependency.DependencyFlags.SoftDependency)]
     public partial class CaudexLibPlugin : BaseUnityPlugin
     {

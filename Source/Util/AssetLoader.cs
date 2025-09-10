@@ -27,6 +27,18 @@ namespace UncertainLuei.CaudexLib.Util
         public static void LocalizationFromFile(Language lang, string path)
             => AssetLoader.LocalizationFromFunction((target) => TryRunLocaleFunction(target, lang, () => DeserializeLocaleFromFile(path)));
 
+        public static void LocalizationFromMod(Language lang, BaseUnityPlugin plug, params string[] paths)
+        {
+            string path = Path.Combine(AssetLoader.GetModPath(plug), Path.Combine(paths));
+            LocalizationFromFile(lang, path);
+        }
+
+        public static void LocalizationFromFolder(Language lang, string rootPath)
+        {
+            foreach (string item in Directory.GetFiles(rootPath, "*.json5"))
+                LocalizationFromFile(lang, item);
+        }
+
         public static void LocalizationFromEmbeddedResource(Language lang, Assembly assembly, string path)
             => AssetLoader.LocalizationFromFunction((target) => TryRunLocaleFunction(target, lang, () => DeserializeLocaleFromEmbedded(assembly, path)));
         public static void LocalizationFromEmbeddedResource(Language lang, string path)
@@ -96,44 +108,31 @@ namespace UncertainLuei.CaudexLib.Util
             }
         }
 
-        // Like AssetLoader.SpritesFromSpritesheet, but based on sprite size and sprite count
-        public static Sprite[] SplitSpriteSheet(Texture2D atlas, int spriteWidth, int spriteHeight, int totalSprites = 0, float pixelsPerUnit = 100f)
-        {
-            int horizontalTiles = atlas.width / spriteWidth;
-            int verticalTiles = atlas.height / spriteHeight;
-
-            if (totalSprites == 0)
-                totalSprites = horizontalTiles * verticalTiles;
-            Sprite[] array = new Sprite[totalSprites];
-
-            Vector2 center = Vector2.one / 2f;
-
-            int i = 0;
-            for (int y = verticalTiles - 1; y >= 0; y--)
-            {
-                for (int x = 0; x < horizontalTiles && i < totalSprites; x++)
-                {
-                    Sprite sprite = Sprite.Create(atlas, new Rect(x * spriteWidth, y * spriteHeight, spriteWidth, spriteHeight), center, pixelsPerUnit, 0u, SpriteMeshType.FullRect);
-                    sprite.name = atlas.name + "_" + i;
-                    array[i++] = sprite;
-                }
-            }
-            return array;
-        }
-
-        public static string ToTextString(this Stream stream)
+        public static string ToTextString(this Stream stream, bool closeStream = true)
         {
             if (stream == null)
             {
-                stream.Close();
+                if (closeStream) stream.Close();
                 throw new ArgumentNullException("stream");
             }
 
             string str;
             StreamReader sr = new(stream);
             str = sr.ReadToEnd();
-            sr.Close();
+            
+            if (closeStream)
+                stream.Close();
+
             return str;
+        }
+
+        public static byte[] ToByteArray(this Stream stream, bool closeStream = true)
+        {
+            byte[] result = AssetLoader.ToByteArray(stream);
+            if (closeStream)
+                stream.Close();
+
+            return result;
         }
 
         public static Texture2D ToTexture2D(this byte[] byteData, string name, TextureFormat format = TextureFormat.RGBA32)
@@ -148,6 +147,9 @@ namespace UncertainLuei.CaudexLib.Util
         private static string GetTemporaryFile(byte[] byteData, params string[] paths)
         {
             string path = Path.Combine(Application.temporaryCachePath, Path.Combine(paths));
+            string dir = Path.GetDirectoryName(path);
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
 
             using FileStream fileStream = new(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
             // Write byte-array data to file if file is empty

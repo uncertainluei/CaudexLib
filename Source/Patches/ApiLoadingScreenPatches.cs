@@ -4,7 +4,6 @@ using MTM101BaldAPI;
 using MTM101BaldAPI.UI;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace UncertainLuei.CaudexLib.Patches
@@ -57,7 +56,7 @@ namespace UncertainLuei.CaudexLib.Patches
         private static IEnumerator WaitForTransition()
         {
             yield return new WaitWhile(() => GlobalCam.Instance.TransitionActive);
-            SceneManager.LoadScene("Warnings");
+            AdditiveSceneManager.Instance.LoadScene("Warnings");
         }
     }
 }

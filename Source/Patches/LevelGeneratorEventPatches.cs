@@ -30,10 +30,10 @@ namespace UncertainLuei.CaudexLib.Patches
             for (; i < length && patchesLeft == 2; i++)
             {
                 // if (levelGenerator.ld.potentialBaldis.Length != 0)
-                if (array[i].opcode   == OpCodes.Ldloc_2 &&
-                    array[i+1].opcode == OpCodes.Ldfld &&
-                    array[i+2].opcode == OpCodes.Ldfld &&
-                    array[i+3].opcode == OpCodes.Ldlen &&
+                if (array[i].opcode   == OpCodes.Ldloc_2    &&
+                    array[i+1].opcode == OpCodes.Ldfld      &&
+                    array[i+2].opcode == OpCodes.Ldfld      &&
+                    array[i+3].opcode == OpCodes.Ldlen      &&
                     array[i+4].opcode == OpCodes.Brfalse)
                 {
                     patchesLeft--;
@@ -50,22 +50,22 @@ namespace UncertainLuei.CaudexLib.Patches
                 // levelCreated = true;
                 // if (CoreGameManager.Instance.GetCamera(0) != null)
                 //     CoreGameManager.Instance.GetCamera(0).StopRendering(false);
-                if (array[i].opcode    == OpCodes.Ldloc_2 &&
-                    array[i+1].opcode  == OpCodes.Ldc_I4_0 &&
-                    array[i+2].opcode  == OpCodes.Stfld &&
-                    array[i+3].opcode  == OpCodes.Ldloc_2 &&
-                    array[i+4].opcode  == OpCodes.Ldc_I4_1 &&
-                    array[i+5].opcode  == OpCodes.Stfld &&
-                    array[i+6].opcode  == OpCodes.Call &&
-                    array[i+7].opcode  == OpCodes.Ldc_I4_0 &&
-                    array[i+8].opcode  == OpCodes.Callvirt &&
-                    array[i+9].opcode  == OpCodes.Ldnull &&
-                    array[i+10].opcode == OpCodes.Call &&
-                    array[i+11].opcode == OpCodes.Brfalse &&
-                    array[i+12].opcode == OpCodes.Call  &&
-                    array[i+13].opcode == OpCodes.Ldc_I4_0 &&
-                    array[i+14].opcode == OpCodes.Callvirt &&
-                    array[i+13].opcode == OpCodes.Ldc_I4_0 &&
+                if (array[i].opcode    == OpCodes.Ldloc_2   &&
+                    array[i+1].opcode  == OpCodes.Ldc_I4_0  &&
+                    array[i+2].opcode  == OpCodes.Stfld     &&
+                    array[i+3].opcode  == OpCodes.Ldloc_2   &&
+                    array[i+4].opcode  == OpCodes.Ldc_I4_1  &&
+                    array[i+5].opcode  == OpCodes.Stfld     &&
+                    array[i+6].opcode  == OpCodes.Call      &&
+                    array[i+7].opcode  == OpCodes.Ldc_I4_0  &&
+                    array[i+8].opcode  == OpCodes.Callvirt  &&
+                    array[i+9].opcode  == OpCodes.Ldnull    &&
+                    array[i+10].opcode == OpCodes.Call      &&
+                    array[i+11].opcode == OpCodes.Brfalse   &&
+                    array[i+12].opcode == OpCodes.Call      &&
+                    array[i+13].opcode == OpCodes.Ldc_I4_0  &&
+                    array[i+14].opcode == OpCodes.Callvirt  &&
+                    array[i+13].opcode == OpCodes.Ldc_I4_0  &&
                     array[i+14].opcode == OpCodes.Callvirt)
                 {
                     patchesLeft--;
