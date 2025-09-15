@@ -18,7 +18,7 @@ namespace UncertainLuei.CaudexLib.Patches
      * the original.
      */
     [HarmonyPatch(typeof(WarningScreenStartPatch), "Prefix")]
-    internal static class DevApiWarningPatch
+    internal static class ApiWarningPatch
     {
         private static bool Prefix(WarningScreen __0, ref bool __result)
         {
@@ -31,10 +31,7 @@ namespace UncertainLuei.CaudexLib.Patches
             __0.audSource.Stop();
 
             if (Chainloader.PluginInfos.ContainsKey("thinkerAPI"))
-            {
-                new GameObject("ThinkerAPI Warning Loader", typeof(ThinkerApiWarningLoader))
-                    .GetComponent<ThinkerApiWarningLoader>().targetScene = __0.scene;
-            }
+                __0.StartCoroutine(LoadSceneDelayedThinkerApi(__0.scene));
             else
                 __0.StartCoroutine(LoadSceneDelayed(__0.scene));
             return false;
@@ -46,18 +43,11 @@ namespace UncertainLuei.CaudexLib.Patches
             AdditiveSceneManager.Instance.LoadScene(target);
         }
 
-        private sealed class ThinkerApiWarningLoader : MonoBehaviour
+        private static IEnumerator LoadSceneDelayedThinkerApi(string target)
         {
-            internal string targetScene;
-
-            private void Update()
-            {
-                if (thinkerAPI.warningScreenBlockers <= 0 && !thinkerAPI.givemeaheadstart)
-                {
-                    StartCoroutine(LoadSceneDelayed(targetScene));
-                    enabled = false;
-                }
-            }
+            yield return new WaitWhile(() => AdditiveSceneManager.Instance.Busy);
+            yield return new WaitWhile(() => thinkerAPI.warningScreenBlockers > 0 || thinkerAPI.givemeaheadstart);
+            AdditiveSceneManager.Instance.LoadScene(target);
         }
     }
 }

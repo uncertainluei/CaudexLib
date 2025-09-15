@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO.Compression;
-using System.Text;
-using MTM101BaldAPI.AssetTools;
 
 namespace UncertainLuei.CaudexLib.Util.FilePack
 {

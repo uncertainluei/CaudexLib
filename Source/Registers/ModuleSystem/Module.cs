@@ -112,7 +112,8 @@ namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
                     continue;
 
                 isSceneObject = true;
-                if (parameters[2].ParameterType == typeof(CustomLevelObject))
+                if (parameters[2].ParameterType == typeof(CustomLevelObject) ||
+                    parameters[2].ParameterType == typeof(LevelObject))
                     isSceneObject = false;
                 else if (parameters[2].ParameterType != typeof(SceneObject))
                     continue;
