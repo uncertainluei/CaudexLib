@@ -40,6 +40,9 @@ namespace UncertainLuei.CaudexLib.Objects
         public bool offLimits;
         public bool holdsActivity;
 
+        public List<BasicObjectSwapData> objectSwaps = [];
+        public List<ItemObject> forcedItems = [];
+
         public RoomFunctionContainer functionContainer;
 
         public RoomAsset CreateAsset(string idName)
@@ -72,6 +75,9 @@ namespace UncertainLuei.CaudexLib.Objects
 
             roomAsset.offLimits = offLimits;
             roomAsset.hasActivity = holdsActivity;
+
+            roomAsset.basicSwaps = objectSwaps;
+            roomAsset.itemList = forcedItems;
 
             roomAsset.roomFunctionContainer = functionContainer;
 
