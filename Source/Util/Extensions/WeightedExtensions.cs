@@ -9,9 +9,7 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
     public static class WeightedHelperExtensions
     {
         public static T Weighted<X, T>(this X selection, int weight) where T : WeightedSelection<X>, new()
-        {
-            return new T() { selection = selection, weight = weight };
-        }
+            => new() { selection = selection, weight = weight };
         public static WeightedNPC Weighted(this NPC selection, int weight) => selection.Weighted<NPC, WeightedNPC>(weight);
         public static WeightedItemObject Weighted(this ItemObject selection, int weight) => selection.Weighted<ItemObject, WeightedItemObject>(weight);
         public static WeightedPosterObject Weighted(this PosterObject selection, int weight) => selection.Weighted<PosterObject, WeightedPosterObject>(weight);
