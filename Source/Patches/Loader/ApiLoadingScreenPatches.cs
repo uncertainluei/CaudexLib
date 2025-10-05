@@ -21,7 +21,7 @@ namespace UncertainLuei.CaudexLib.Patches
 
             Canvas blackCanvas = UIHelpers.CreateBlankUIScreen("BlackScreen", false, true);
             Image black = new GameObject("Black", typeof(Image)).GetComponent<Image>();
-            black.color = Color.black;
+            black.color = CaudexLibPlugin.darkModeLoadingScreen.Value ? Color.black : Color.white;
             black.transform.SetParent(blackCanvas.transform, false);
             black.rectTransform.anchoredPosition = Vector2.zero;
             black.rectTransform.anchorMin = Vector2.zero;
@@ -34,17 +34,23 @@ namespace UncertainLuei.CaudexLib.Patches
         [HarmonyPatch("Start"), HarmonyPostfix]
         private static void Start(ModLoadingScreenManager __instance)
         {
-            TMP_Text[] texts = __instance.transform.GetComponentsInChildren<TextMeshProUGUI>();
-            foreach (TMP_Text txt in texts)
-                txt.color = Color.white;
+            if (CaudexLibPlugin.darkModeLoadingScreen.Value)
+            {
+                TMP_Text[] texts = __instance.transform.GetComponentsInChildren<TextMeshProUGUI>();
+                foreach (TMP_Text txt in texts)
+                    txt.color = Color.white;
 
-            __instance.GetComponent<Image>().color = Color.black;
-            GameObject.Destroy(_blackScreen);
+                __instance.GetComponent<Image>().color = Color.black;
+            }
+            GameObject.DestroyImmediate(_blackScreen);
         }
 
         [HarmonyPatch("LoadingEnded"), HarmonyPrefix]
         private static bool OnComplete(ModLoadingScreenManager __instance)
         {
+            if (!CaudexLibPlugin.changeWarningScreenOrder.Value)
+                return true;
+
             GlobalCam.Instance.Transition(UiTransition.Dither, 1 / 30f);
 
             foreach (Transform child in __instance.transform)

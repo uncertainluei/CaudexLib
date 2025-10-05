@@ -8,7 +8,6 @@ using MTM101BaldAPI.Patches;
 using ThinkerAPI;
 
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace UncertainLuei.CaudexLib.Patches
 {
@@ -17,6 +16,7 @@ namespace UncertainLuei.CaudexLib.Patches
      * warning screen showing a copy of the vanilla "WARNING!" text after
      * the original.
      */
+    [ConditionalPatchConfig(CaudexLibPlugin.ModGuid, "LoadingScreen", "ChangeWarningScreenOrder")]
     [HarmonyPatch(typeof(WarningScreenStartPatch), "Prefix")]
     internal static class ApiWarningPatch
     {

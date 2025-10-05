@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Bootstrap;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 
 using HarmonyLib;
@@ -23,16 +24,22 @@ namespace UncertainLuei.CaudexLib
     [BepInDependency("thinkerAPI", BepInDependency.DependencyFlags.SoftDependency)]
     public partial class CaudexLibPlugin : BaseUnityPlugin
     {
-        private const string ModGuid = "io.github.uncertainluei.caudexlib";
+        internal const string ModGuid = "io.github.uncertainluei.caudexlib";
         private const string ApiGuid = "mtm101.rulerp.bbplus.baldidevapi";
 
         internal static CaudexLibPlugin Plugin { get; private set; }
         internal static ManualLogSource Log { get; private set; }
 
+        internal static ConfigEntry<bool> changeWarningScreenOrder;
+        internal static ConfigEntry<bool> darkModeLoadingScreen;
+
         private void Awake()
         {
             Plugin = this;
             Log = Logger;
+
+            changeWarningScreenOrder = Config.Bind("LoadingScreen", "ChangeWarningScreenOrder", false, "Makes the loading screen load 'before' the warning screen.");
+            darkModeLoadingScreen = Config.Bind("LoadingScreen", "DarkMode", false, "Makes the loading screen's background black.");
 
             SplashLogos.AddLogo(CaudexAssetLoader.TextureFromEmbeddedResource("Ui/Splashes/uncertainluei_logo.png"));
             CaudexAssetLoader.LocalizationFromEmbeddedResource(Language.English, "Lang/English.json5");
