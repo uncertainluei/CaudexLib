@@ -4,7 +4,9 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 
 using HarmonyLib;
+
 using MTM101BaldAPI;
+using MTM101BaldAPI.Registers;
 
 using System;
 using System.Collections;
@@ -14,6 +16,7 @@ using UncertainLuei.CaudexLib.Registers.ModuleSystem;
 using UncertainLuei.CaudexLib.Util;
 using UncertainLuei.CaudexLib.Util.Extensions;
 using UncertainLuei.CaudexLib.Util.FilePack;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -66,18 +69,35 @@ namespace UncertainLuei.CaudexLib
             Type chainloader = typeof(Chainloader);
             yield return new WaitUntil(() => AccessTools.StaticFieldRefAccess<bool>(chainloader, "_loaded"));
 
-            Logger.LogDebug("Loading existing plugins");
-            foreach (PluginInfo plug in Chainloader.PluginInfos.Values)
+            try
             {
-                if (plug == Info) continue;
-                CaudexModuleLoader.GetModulesFromPlugin(plug);
-            }
+                Logger.LogDebug("Loading existing plugins");
+                foreach (PluginInfo plug in Chainloader.PluginInfos.Values)
+                {
+                    if (plug == Info) continue;
+                    CaudexModuleLoader.GetModulesFromPlugin(plug);
+                }
 
-            Logger.LogDebug("Running queued actions");
-            QueuedActions.RunQueuedActions();
+                Logger.LogDebug("Running queued actions");
+                QueuedActions.RunQueuedActions();
+            }
+            catch (Exception e)
+            {
+                CauseDelayedCrash(Info, e);
+            }
 
             if (displayLogos)
                 timer.StartLogoDisplay();
+        }
+
+        public static void CauseDelayedCrash(PluginInfo plugin, Exception e)
+            => LoadingEvents.RegisterOnAssetsLoaded(plugin, DelayedCrash(plugin, e), LoadingEventOrder.Start);
+
+        private static IEnumerator DelayedCrash(PluginInfo plugin, Exception e)
+        {
+            yield return 1;
+            yield return "Error found! Crashing...";
+            MTM101BaldiDevAPI.CauseCrash(plugin, e);
         }
 
         /*

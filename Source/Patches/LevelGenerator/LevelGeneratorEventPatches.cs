@@ -82,7 +82,7 @@ namespace UncertainLuei.CaudexLib.Patches
             }
 
             if (patchesLeft > 0)
-                CaudexLibPlugin.Log.LogError("Transpiler \"RecommendedChars.LevelGeneratorEventPatch.Transpiler\" wasn't properly applied!");
+                CaudexLibPlugin.Log.LogError("Transpiler \"CaudexLib.LevelGeneratorEventPatches.EventTranspiler\" wasn't properly applied!");
 
             yield break;
         }

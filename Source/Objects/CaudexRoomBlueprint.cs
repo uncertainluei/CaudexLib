@@ -12,6 +12,37 @@ namespace UncertainLuei.CaudexLib.Objects
         {
         }
 
+        public CaudexRoomBlueprint(PluginInfo plug, string name, RoomAsset baseAsset) : this(plug, name, baseAsset.category)
+        {
+            type = baseAsset.type;
+            color = baseAsset.color;
+
+            texFloor = baseAsset.florTex;
+            texCeil = baseAsset.ceilTex;
+            texWall = baseAsset.wallTex;
+
+            keepTextures = baseAsset.keepTextures;
+
+            lightObj = baseAsset.lightPre;
+            mapMaterial = baseAsset.mapMaterial;
+            doorMats = baseAsset.doorMats;
+
+            posterChance = baseAsset.posterChance;
+            posters = baseAsset.posters;
+
+            windowChance = baseAsset.windowChance;
+            windowSet = baseAsset.windowObject;
+
+            itemValMin = baseAsset.minItemValue;
+            itemValMax = baseAsset.maxItemValue;
+
+            offLimits = baseAsset.offLimits;
+            objectSwaps = baseAsset.basicSwaps;
+            forcedItems = baseAsset.itemList;
+
+            functionContainer = baseAsset.roomFunctionContainer;
+        }
+
         public PluginInfo Plugin { get; } = plug;
         public string name = name;
         public RoomCategory category = cat;
@@ -38,7 +69,6 @@ namespace UncertainLuei.CaudexLib.Objects
         public int itemValMax = 100;
 
         public bool offLimits;
-        public bool holdsActivity;
 
         public List<BasicObjectSwapData> objectSwaps = [];
         public List<ItemObject> forcedItems = [];
@@ -74,7 +104,8 @@ namespace UncertainLuei.CaudexLib.Objects
             roomAsset.maxItemValue = itemValMax;
 
             roomAsset.offLimits = offLimits;
-            roomAsset.hasActivity = holdsActivity;
+
+            roomAsset.hasActivity = false;
 
             roomAsset.basicSwaps = objectSwaps;
             roomAsset.itemList = forcedItems;

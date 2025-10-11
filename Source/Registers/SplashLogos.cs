@@ -79,7 +79,7 @@ namespace UncertainLuei.CaudexLib.Registers
             timer.Stop();
         }
 
-        private static void Stop(this SceneTimer timer)
+        internal static void Stop(this SceneTimer timer)
         {
             timer.StopAllCoroutines();
             timer.firstFramePassed = true;
