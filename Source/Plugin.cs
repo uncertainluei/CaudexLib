@@ -91,7 +91,7 @@ namespace UncertainLuei.CaudexLib
         }
 
         public static void CauseDelayedCrash(PluginInfo plugin, Exception e)
-            => LoadingEvents.RegisterOnAssetsLoaded(plugin, DelayedCrash(plugin, e), LoadingEventOrder.Start);
+            => LoadingEvents.RegisterOnAssetsLoaded(Plugin.Info, DelayedCrash(plugin, e), LoadingEventOrder.Start);
 
         private static IEnumerator DelayedCrash(PluginInfo plugin, Exception e)
         {
