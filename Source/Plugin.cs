@@ -77,7 +77,14 @@ namespace UncertainLuei.CaudexLib
                     if (plug == Info) continue;
                     CaudexModuleLoader.GetModulesFromPlugin(plug);
                 }
+            }
+            catch (Exception e)
+            {
+                CauseDelayedCrash(Info, e);
+            }
 
+            try
+            {
                 Logger.LogDebug("Running queued actions");
                 QueuedActions.RunQueuedActions();
             }
