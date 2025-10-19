@@ -74,7 +74,7 @@ namespace UncertainLuei.CaudexLib
                 Logger.LogDebug("Loading existing plugins");
                 foreach (PluginInfo plug in Chainloader.PluginInfos.Values)
                 {
-                    if (plug == Info) continue;
+                    if (plug == Info || plug == null || plug.Instance == null) continue;
                     CaudexModuleLoader.GetModulesFromPlugin(plug);
                 }
             }

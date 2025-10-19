@@ -9,8 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-using UnityEngine;
-
 namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
 {
     internal static class CaudexModuleLoader
@@ -23,6 +21,19 @@ namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
 
         internal static void GetModulesFromPlugin(PluginInfo plug)
         {
+            // Check if it has Caudex Lib as a dependency. If it isn't it, then ignore it and move on
+            bool isCaudexPlugin = false;
+            foreach (var dependency in plug.Dependencies)
+            {
+                if (dependency.DependencyGUID == CaudexLibPlugin.ModGuid)
+                {
+                    isCaudexPlugin = true;
+                    break;
+                }
+            }
+            if (!isCaudexPlugin)
+                return;
+
             Assembly assembly = plug.Instance.GetType().Assembly;
 
             /* Allows Caudex Lib's module system to grab the first loaded plugin in the assembly
