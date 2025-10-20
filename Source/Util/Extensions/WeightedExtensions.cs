@@ -20,7 +20,7 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
         // Done for future-proofing
         public static int GetNpcWeight(this ICollection<WeightedNPC> collection, Character characterToCopy, int fallback = -1)
         {
-            WeightedNPC weightedToCopy = collection.First(x => x.selection?.character == characterToCopy);
+            WeightedNPC weightedToCopy = collection.FirstOrDefault(x => x.selection?.character == characterToCopy);
             if (weightedToCopy != null)
                 return weightedToCopy.weight;
 
@@ -37,7 +37,7 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
         // Apparently there are TWO weighted classes that hold an ItemObject. Froge Mod Loader.
         public static int GetItemWeight<T>(this ICollection<T> collection, Items itmToCopy, int fallback = -1) where T : WeightedSelection<ItemObject>
         {
-            T weightedToCopy = collection.First(x => x.selection?.itemType == itmToCopy);
+            T weightedToCopy = collection.FirstOrDefault(x => x.selection?.itemType == itmToCopy);
             if (weightedToCopy != null)
                 return weightedToCopy.weight;
 
