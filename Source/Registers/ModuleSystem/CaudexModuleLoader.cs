@@ -72,6 +72,7 @@ namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
             }
             foreach (Type type in types)
             {
+                if (type == null) continue;
                 if (!type.IsSubclassOf(moduleType)) continue;
                 if (type.GetCustomAttributes(typeof(CaudexModule), true).Length == 0) continue;
                 AbstractCaudexModule newModule = (AbstractCaudexModule)Activator.CreateInstance(type);

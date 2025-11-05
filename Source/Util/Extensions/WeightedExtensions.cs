@@ -20,9 +20,12 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
         // Done for future-proofing
         public static int GetNpcWeight(this ICollection<WeightedNPC> collection, Character characterToCopy, int fallback = -1)
         {
-            WeightedNPC weightedToCopy = collection.FirstOrDefault(x => x.selection?.character == characterToCopy);
-            if (weightedToCopy != null)
-                return weightedToCopy.weight;
+            if (collection.Count > 0)
+            {
+                WeightedNPC weightedToCopy = collection.FirstOrDefault(x => x != null && x.selection?.character == characterToCopy);
+                if (weightedToCopy != null)
+                    return weightedToCopy.weight;
+            }
 
             CaudexLibPlugin.Log.LogWarning($"No character with enum {characterToCopy.ToStringExtended()} exists in the collection!");
             return fallback;
@@ -37,9 +40,12 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
         // Apparently there are TWO weighted classes that hold an ItemObject. Froge Mod Loader.
         public static int GetItemWeight<T>(this ICollection<T> collection, Items itmToCopy, int fallback = -1) where T : WeightedSelection<ItemObject>
         {
-            T weightedToCopy = collection.FirstOrDefault(x => x.selection?.itemType == itmToCopy);
-            if (weightedToCopy != null)
-                return weightedToCopy.weight;
+            if (collection.Count > 0)
+            {
+                T weightedToCopy = collection.FirstOrDefault(x => x != null && x.selection?.itemType == itmToCopy);
+                if (weightedToCopy != null)
+                    return weightedToCopy.weight;
+            }
 
             CaudexLibPlugin.Log.LogWarning($"No item with type enum {itmToCopy.ToStringExtended()} exists in the collection!");
             return fallback;
