@@ -86,9 +86,5 @@ namespace UncertainLuei.CaudexLib.Patches
 
             yield break;
         }
-
-        [HarmonyPatch("Generate", MethodType.Enumerator), HarmonyFinalizer, HarmonyPriority(1000)]
-        public static Exception ReinstateTheApiFinalizer(Exception __exception)
-            => MTM101BaldAPI.Patches.LevelGeneratorPatches.Finalizer(__exception);
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Linq;
 using HarmonyLib;
 using MTM101BaldAPI;
 using MTM101BaldAPI.ObjectCreation;
@@ -58,7 +57,7 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
                 return itmObj;
             }
             ItemMetaData itemMeta = new(builder.info, itmObj);
-            itemMeta.tags.AddRange(builder.tags);
+            itemMeta.tags.UnionWith(builder.tags);
             itemMeta.flags = builder.flags;
             itmObj.AddMeta(itemMeta);
             return itmObj;

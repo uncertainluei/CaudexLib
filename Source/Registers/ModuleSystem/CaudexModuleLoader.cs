@@ -11,57 +11,50 @@ using System.Reflection;
 
 namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
 {
-    internal static class CaudexModuleLoader
+    public static class CaudexModuleLoader
     {
-        internal static Dictionary<Assembly, PluginInfo> pluginsFromAssembly = [];
+        internal static Dictionary<Assembly, BaseUnityPlugin> pluginsFromAssembly = [];
+        internal static Dictionary<PluginInfo, BaseUnityPlugin> pluginsFromInfo = [];
+
         internal static Dictionary<PluginInfo, List<AbstractCaudexModule>> pluginModules = [];
 
         internal static readonly LoadingEventOrder[] loadEventOrders = (LoadingEventOrder[])Enum.GetValues(typeof(LoadingEventOrder));
         internal static readonly GenerationModType[] genModTypes = (GenerationModType[])Enum.GetValues(typeof(GenerationModType));
 
-        internal static void GetModulesFromPlugin(PluginInfo plug)
+        public static void LoadAllModules(BaseUnityPlugin plug, Assembly assembly = null)
         {
-            // Check if it has Caudex Lib as a dependency. If it isn't it, then ignore it and move on
-            bool isCaudexPlugin = false;
-            foreach (var dependency in plug.Dependencies)
-            {
-                if (dependency.DependencyGUID == CaudexLibPlugin.ModGuid)
-                {
-                    isCaudexPlugin = true;
-                    break;
-                }
-            }
-            if (!isCaudexPlugin)
-                return;
+            if (plug == null)
+                throw new ArgumentNullException("plug");
 
-            Assembly assembly = plug.Instance.GetType().Assembly;
+            assembly ??= plug.GetType().Assembly;
 
-            /* Allows Caudex Lib's module system to grab the first loaded plugin in the assembly
-             * if not manually provided.
-             */
+            // Grabs the declared PluginInfo                
             if (!pluginsFromAssembly.ContainsKey(assembly))
             {
                 pluginsFromAssembly.Add(assembly, plug);
-                GetModulesFromAssembly(assembly);
+                pluginsFromInfo.Add(plug.Info, plug);
+                GetModulesFromAssembly(assembly, plug.Info);
             }
-            if (!pluginModules.ContainsKey(plug))
+            if (!pluginModules.ContainsKey(plug.Info))
                 return;
 
             foreach (LoadingEventOrder order in loadEventOrders)
             {
-                AbstractCaudexModule[] modules = pluginModules[plug].Where(x => x.loadMethods.ContainsKey(order)).ToArray();
+                AbstractCaudexModule[] modules = pluginModules[plug.Info].Where(x => x.loadMethods.ContainsKey(order)).ToArray();
                 if (modules.Length == 0) continue;
-                LoadingEvents.RegisterOnAssetsLoaded(plug, LoadModules(plug, modules, order), order);
+                LoadingEvents.RegisterOnAssetsLoaded(plug.Info, LoadModules(plug.Info, modules, order), order);
             }
             foreach (GenerationModType genModType in genModTypes)
-                GeneratorManagement.Register(plug.Instance, genModType, (title,no,scene) => LoadGeneratorMods(title, no, scene, plug, genModType));
+                GeneratorManagement.Register(plug, genModType, (title,no,scene) => LoadGeneratorMods(title, no, scene, plug.Info, genModType));
         }
 
-        private static void GetModulesFromAssembly(Assembly assembly)
-        {
-            Type moduleType = typeof(AbstractCaudexModule);
+        private static readonly Type _moduleType = typeof(AbstractCaudexModule);
 
+        private static void GetModulesFromAssembly(Assembly assembly, PluginInfo plug)
+        {
             Type[] types;
+            object[] attributes;
+
             try
             {
                 types = assembly.GetTypes();
@@ -73,11 +66,24 @@ namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
             foreach (Type type in types)
             {
                 if (type == null) continue;
-                if (!type.IsSubclassOf(moduleType)) continue;
-                if (type.GetCustomAttributes(typeof(CaudexModule), true).Length == 0) continue;
+                if (!type.IsSubclassOf(_moduleType)) continue;
+
+                attributes = type.GetCustomAttributes(typeof(CaudexModule), true);
+                if (attributes.Length == 0) continue;
+                if (!((CaudexModule)attributes[0]).IsFromPlugin(plug, assembly)) continue;
+
                 AbstractCaudexModule newModule = (AbstractCaudexModule)Activator.CreateInstance(type);
                 newModule.TryInitialize();
             }
+        }
+
+        private static bool IsFromPlugin(this CaudexModule attribute, PluginInfo info, Assembly assembly)
+        {
+            string guid = attribute.PluginGuid;
+            if (guid.IsNullOrWhiteSpace())
+                guid = pluginsFromAssembly[assembly].Info.Metadata.GUID;
+
+            return guid == info.Metadata.GUID;
         }
 
         private static IEnumerator LoadModules(PluginInfo plug, AbstractCaudexModule[] modules, LoadingEventOrder order)

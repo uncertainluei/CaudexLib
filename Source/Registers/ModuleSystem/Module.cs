@@ -37,20 +37,27 @@ namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
                 throw new InvalidOperationException("Cannot instantiate Caudex module " + GetType().FullName + " because the CaudexModule attribute is missing!");
 
             PluginInfo info;
+            BaseUnityPlugin plugin = null;
             if (properties.PluginGuid.IsNullOrWhiteSpace())
-                info = CaudexModuleLoader.pluginsFromAssembly[type.Assembly];
+            {
+                plugin = CaudexModuleLoader.pluginsFromAssembly[type.Assembly];
+                info = plugin.Info;
+            }
             else if (!Chainloader.PluginInfos.TryGetValue(properties.PluginGuid, out info))
                 throw new InvalidOperationException("Cannot instantiate Caudex module " + GetType().FullName + " because it is referencing a plugin that is not available!");
             else if (info.Instance.GetType().Assembly != type.Assembly)
                 throw new InvalidOperationException("Cannot instantiate Caudex module " + GetType().FullName + " because it is referencing a plugin outside its assembly!");
 
+            if (!plugin)
+                plugin = CaudexModuleLoader.pluginsFromInfo[info];
+
             ConfigEntry<bool> configEntry = null;
             if (configProperties != null)
             {
                 ConfigDefinition def = new(configProperties.Section, configProperties.Key);
-                if (!info.Instance.Config.ContainsKey(def))
+                if (!plugin.Config.ContainsKey(def))
                 {
-                    configEntry = info.Instance.Config.Bind(
+                    configEntry = plugin.Config.Bind(
                     configProperties.Section,
                     configProperties.Key,
                     configProperties.DefaultValue,

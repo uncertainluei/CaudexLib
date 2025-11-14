@@ -66,14 +66,12 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
             return itm.descKey;
         }
 
-        public static void OnUseSuccess(this ItemObject itm, ItemManager im)
+        public static bool OverrideUseResult(this ItemObject itm, ItemManager im)
         {
             if (itm is CaudexItemObject cItm)
-            {
-                cItm.OnUseSuccess(im);
-                return;
-            }
-            CaudexItemObject.DefaultOnUseSuccess(im);
+                return cItm.OverrideUseResult(im);
+                
+            return false;
         }
 
         public static void SetFunctionAcrossMeta(this ItemObject itm, Item func)

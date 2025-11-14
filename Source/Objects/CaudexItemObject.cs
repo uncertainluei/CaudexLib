@@ -12,13 +12,7 @@ namespace UncertainLuei.CaudexLib.Objects
         public string UnlocalizedDesc => this.GetDescription(false);
         public virtual string DescKey => descKey;
 
-        internal static void DefaultOnUseSuccess(ItemManager im)
-        {
-            im.RemoveItem(im.selectedItem);
-            if (CoreGameManager.Instance.inventoryChallenge)
-                im.RemoveItemSlot(im.selectedItem);
-        }
-        public virtual void OnUseSuccess(ItemManager im) => DefaultOnUseSuccess(im);
+        public virtual bool OverrideUseResult(ItemManager im) => false;
     }
 
     public class CaudexMultiItemObject : CaudexItemObject
@@ -28,14 +22,14 @@ namespace UncertainLuei.CaudexLib.Objects
         public byte stateNo;
         public ItemObject nextStage;
 
-        public override void OnUseSuccess(ItemManager im)
+        public override bool OverrideUseResult(ItemManager im)
         {
-            if (nextStage != null)
+            if (nextStage)
             {
                 im.SetItem(nextStage, im.selectedItem);
-                return;
+                return true;
             }
-            base.OnUseSuccess(im);
+            return base.OverrideUseResult(im);
         }
     }
 }

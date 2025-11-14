@@ -10,7 +10,7 @@ using MTM101BaldAPI.Registers;
 
 using System;
 using System.Collections;
-
+using System.Runtime.InteropServices;
 using UncertainLuei.CaudexLib.Registers;
 using UncertainLuei.CaudexLib.Registers.ModuleSystem;
 using UncertainLuei.CaudexLib.Util;
@@ -23,7 +23,7 @@ using UnityEngine.SceneManagement;
 namespace UncertainLuei.CaudexLib
 {
     [BepInAutoPlugin(ModGuid, "Caudex Lib")]
-    [BepInDependency(ApiGuid, "9.1")]
+    [BepInDependency(ApiGuid, "10.0")]
     [BepInDependency("thinkerAPI", BepInDependency.DependencyFlags.SoftDependency)]
     public partial class CaudexLibPlugin : BaseUnityPlugin
     {
@@ -72,11 +72,7 @@ namespace UncertainLuei.CaudexLib
             try
             {
                 Logger.LogDebug("Loading existing plugins");
-                foreach (PluginInfo plug in Chainloader.PluginInfos.Values)
-                {
-                    if (plug == Info || plug == null || plug.Instance == null) continue;
-                    CaudexModuleLoader.GetModulesFromPlugin(plug);
-                }
+                // TBA
             }
             catch (Exception e)
             {
