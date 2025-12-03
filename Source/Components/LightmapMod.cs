@@ -33,10 +33,14 @@ namespace UncertainLuei.CaudexLib.Components
 
             _ec = ec;
             if (_instances.ContainsKey(ec))
-                _instance = _instances[ec];
-            else
             {
-                _instance = ec.GetComponent<LightmapModHolder>();
+                _instance = _instances[ec];
+                return _instance;
+            }
+
+            _instance = ec.GetComponent<LightmapModHolder>();
+            if (_instance)
+            {
                 _instance.Environment = ec;
                 _instances.Add(ec, _instance);
             }
