@@ -27,7 +27,7 @@ namespace UncertainLuei.CaudexLib.Registers
     public static class CaudexGeneratorEvents
     {
         public delegate void GenerationEventAction(LevelGenerator gen);
-        private static List<GenerationEventAction>[] generationEventActions = new List<GenerationEventAction>[(byte)CaudexGeneratorEventType.Finalizer+1];
+        private static readonly List<GenerationEventAction>[] generationEventActions = new List<GenerationEventAction>[(byte)CaudexGeneratorEventType.Finalizer+1];
 
         public static void AddAction(CaudexGeneratorEventType type, GenerationEventAction action)
         {

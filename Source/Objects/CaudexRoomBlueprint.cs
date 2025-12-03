@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-
-using BepInEx;
+﻿using BepInEx;
 using MTM101BaldAPI;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace UncertainLuei.CaudexLib.Objects

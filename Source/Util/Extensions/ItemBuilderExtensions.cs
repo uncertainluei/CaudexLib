@@ -80,7 +80,7 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
                 itmObj.name = $"{objName}_{itmObj.stateNo}";
                 itmObj.nextStage = last;
 
-                if (i == stateCount - 1) break;
+                if (i == stateCount-1) break;
 
                 last = itmObj;
                 itmObj = ScriptableObject.Instantiate(itmObj);
