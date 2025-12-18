@@ -48,12 +48,16 @@ namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
                 GeneratorManagement.Register(plug, genModType, (title,no,scene) => LoadGeneratorMods(title, no, scene, plug.Info, genModType));
         }
 
-        private static readonly Type _moduleType = typeof(AbstractCaudexModule);
+        private static readonly Type _moduleType = typeof(AbstractCaudexModule),
+            _moduleAttrbType = typeof(CaudexModule),
+            _modulePriortyType = typeof(CaudexModulePriority);
 
         private static void GetModulesFromAssembly(Assembly assembly, PluginInfo plug)
         {
             Type[] types;
             object[] attributes;
+            sbyte priority = 0;
+            Dictionary<sbyte, List<Type>> priorityList = []; 
 
             try
             {
@@ -63,17 +67,40 @@ namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
             {
                 types = ex.Types.Where((Type type) => type != null).ToArray();
             }
+
             foreach (Type type in types)
             {
                 if (type == null) continue;
                 if (!type.IsSubclassOf(_moduleType)) continue;
 
-                attributes = type.GetCustomAttributes(typeof(CaudexModule), true);
-                if (attributes.Length == 0) continue;
-                if (!((CaudexModule)attributes[0]).IsFromPlugin(plug, assembly)) continue;
+                attributes = type.GetCustomAttributes(_moduleAttrbType, true);
+                if (attributes.Length == 0 || !((CaudexModule)attributes[0]).IsFromPlugin(plug, assembly)) continue;
 
-                AbstractCaudexModule newModule = (AbstractCaudexModule)Activator.CreateInstance(type);
-                newModule.TryInitialize();
+                priority = 0;
+                attributes = type.GetCustomAttributes(_modulePriortyType, false);
+                if (attributes.Length > 0)
+                    priority = ((CaudexModulePriority)attributes[0]).Priority;
+
+                if (!priorityList.ContainsKey(priority))
+                    priorityList.Add(priority, []);
+                    
+                priorityList[priority].Add(type);
+            }
+
+            priority = sbyte.MaxValue;
+            while (true)
+            {
+                if (priorityList.ContainsKey(priority))
+                {
+                    foreach (Type type in priorityList[priority])
+                    {
+                        AbstractCaudexModule newModule = (AbstractCaudexModule)Activator.CreateInstance(type);
+                        newModule.TryInitialize();
+                    }
+                }
+
+                if (priority == sbyte.MinValue) break;
+                priority--;
             }
         }
 

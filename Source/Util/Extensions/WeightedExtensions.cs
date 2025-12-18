@@ -11,6 +11,7 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
         public static T Weighted<X, T>(this X selection, int weight) where T : WeightedSelection<X>, new()
             => new() { selection = selection, weight = weight };
         public static WeightedNPC Weighted(this NPC selection, int weight) => selection.Weighted<NPC, WeightedNPC>(weight);
+        public static WeightedRandomEvent Weighted(this RandomEvent selection, int weight) => selection.Weighted<RandomEvent, WeightedRandomEvent>(weight);
         public static WeightedItemObject Weighted(this ItemObject selection, int weight) => selection.Weighted<ItemObject, WeightedItemObject>(weight);
         public static WeightedPosterObject Weighted(this PosterObject selection, int weight) => selection.Weighted<PosterObject, WeightedPosterObject>(weight);
         public static WeightedRoomAsset Weighted(this RoomAsset selection, int weight) => selection.Weighted<RoomAsset, WeightedRoomAsset>(weight);

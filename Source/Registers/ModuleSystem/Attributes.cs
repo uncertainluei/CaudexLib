@@ -33,6 +33,12 @@ namespace UncertainLuei.CaudexLib.Registers.ModuleSystem
         public string Value { get; } = tag;
     }
 
+    // Attribute for determining the order of when modules load, ideal for submodules
+    public sealed class CaudexModulePriority(sbyte priority = 0) : Attribute
+    {
+        public sbyte Priority { get; } = priority;
+    }
+
     // Loading Events
     public class CaudexLoadEvent(LoadingEventOrder order) : Attribute
     {
