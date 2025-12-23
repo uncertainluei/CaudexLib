@@ -10,9 +10,7 @@ using MTM101BaldAPI.Registers;
 
 using System;
 using System.Collections;
-using System.Runtime.InteropServices;
 using UncertainLuei.CaudexLib.Registers;
-using UncertainLuei.CaudexLib.Registers.ModuleSystem;
 using UncertainLuei.CaudexLib.Util;
 using UncertainLuei.CaudexLib.Util.Extensions;
 using UncertainLuei.CaudexLib.Util.FilePack;
@@ -23,7 +21,7 @@ using UnityEngine.SceneManagement;
 namespace UncertainLuei.CaudexLib
 {
     [BepInAutoPlugin(ModGuid, "Caudex Lib")]
-    [BepInDependency(ApiGuid, "10.0")]
+    [BepInDependency(ApiGuid, "10.2")]
     [BepInDependency("thinkerAPI", BepInDependency.DependencyFlags.SoftDependency)]
     public partial class CaudexLibPlugin : BaseUnityPlugin
     {
@@ -33,6 +31,7 @@ namespace UncertainLuei.CaudexLib
         internal static CaudexLibPlugin Plugin { get; private set; }
         internal static ManualLogSource Log { get; private set; }
 
+        internal static ConfigEntry<bool> customSplashScreen;
         internal static ConfigEntry<bool> changeWarningScreenOrder;
         internal static ConfigEntry<bool> darkModeLoadingScreen;
 
@@ -41,6 +40,7 @@ namespace UncertainLuei.CaudexLib
             Plugin = this;
             Log = Logger;
 
+            customSplashScreen = Config.Bind("General", "CustomSplashes", true, "Enables custom logos when booting up the game.");
             changeWarningScreenOrder = Config.Bind("LoadingScreen", "ChangeWarningScreenOrder", false, "Makes the loading screen load 'before' the warning screen.");
             darkModeLoadingScreen = Config.Bind("LoadingScreen", "DarkMode", false, "Makes the loading screen's background black.");
 
@@ -59,7 +59,7 @@ namespace UncertainLuei.CaudexLib
         {
             bool displayLogos = false;
             SceneTimer timer = FindObjectOfType<SceneTimer>();
-            if (timer != null)
+            if (timer && customSplashScreen.Value)
             {
                 displayLogos = true;
                 timer.enabled = false;
