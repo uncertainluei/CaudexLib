@@ -45,8 +45,13 @@ namespace UncertainLuei.CaudexLib.Registers
 
         internal static void StartLogoDisplay(this SceneTimer timer)
         {
-            if (logos.Count > 0)
-                timer.StartCoroutine(DisplayLogos(timer));
+            if (logos.Count == 0)
+            {
+                timer.enabled = true;
+                return;
+            }
+            
+            timer.StartCoroutine(DisplayLogos(timer));
         }
 
         private static IEnumerator DisplayLogos(SceneTimer timer)

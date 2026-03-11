@@ -6,22 +6,26 @@ using BepInEx.Logging;
 using HarmonyLib;
 
 using MTM101BaldAPI;
+using MTM101BaldAPI.AssetTools;
 using MTM101BaldAPI.Registers;
 
 using System;
 using System.Collections;
+using System.Linq;
+using UncertainLuei.CaudexLib.Components;
 using UncertainLuei.CaudexLib.Registers;
 using UncertainLuei.CaudexLib.Util;
 using UncertainLuei.CaudexLib.Util.Extensions;
 using UncertainLuei.CaudexLib.Util.FilePack;
 
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 namespace UncertainLuei.CaudexLib
 {
     [BepInAutoPlugin(ModGuid, "Caudex Lib")]
-    [BepInDependency(ApiGuid, "10.2")]
+    [BepInDependency(ApiGuid, "11.0.0.2")]
     [BepInDependency("thinkerAPI", BepInDependency.DependencyFlags.SoftDependency)]
     public partial class CaudexLibPlugin : BaseUnityPlugin
     {
@@ -44,8 +48,9 @@ namespace UncertainLuei.CaudexLib
             changeWarningScreenOrder = Config.Bind("LoadingScreen", "ChangeWarningScreenOrder", false, "Makes the loading screen load 'before' the warning screen.");
             darkModeLoadingScreen = Config.Bind("LoadingScreen", "DarkMode", false, "Makes the loading screen's background black.");
 
-            SplashLogos.AddLogo(CaudexAssetLoader.TextureFromEmbeddedResource("Ui/Splashes/uncertainluei_logo.png"));
+            //SplashLogos.AddLogo(CaudexAssetLoader.TextureFromEmbeddedResource("Ui/Splashes/uncertainluei_logo.png"));
             CaudexAssetLoader.LocalizationFromEmbeddedResource(Language.English, "Lang/English.json5");
+            LoadingEvents.RegisterOnAssetsLoaded(Plugin.Info, GrabEssentialAssets(), LoadingEventOrder.Pre);
 
             FilePackReader.InitReadChecks(Info);
 
@@ -95,6 +100,13 @@ namespace UncertainLuei.CaudexLib
 
         public static void CauseDelayedCrash(PluginInfo plugin, Exception e)
             => LoadingEvents.RegisterOnAssetsLoaded(Plugin.Info, DelayedCrash(plugin, e), LoadingEventOrder.Start);
+
+        private static IEnumerator GrabEssentialAssets()
+        {
+            yield return 1;
+            yield return "Grabbing Master audio mixer";
+            PlayerSilenceManager.mixer = AssetFinder.FindOfTypeWithName<AudioMixer>("Master", true);
+        }
 
         private static IEnumerator DelayedCrash(PluginInfo plugin, Exception e)
         {
