@@ -45,8 +45,7 @@ namespace UncertainLuei.CaudexLib.Patches
 
         private static IEnumerator LoadSceneDelayedThinkerApi(string target)
         {
-            yield return new WaitWhile(() => AdditiveSceneManager.Instance.Busy);
-            yield return new WaitWhile(() => thinkerAPI.warningScreenBlockers > 0 || thinkerAPI.givemeaheadstart);
+            yield return new WaitWhile(() => AdditiveSceneManager.Instance.Busy || thinkerAPI.warningScreenBlockers > 0 || thinkerAPI.givemeaheadstart);
             AdditiveSceneManager.Instance.LoadScene(target);
         }
     }

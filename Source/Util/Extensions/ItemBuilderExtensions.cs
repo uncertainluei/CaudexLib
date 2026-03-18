@@ -21,7 +21,12 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
             itmObj.name = builder.localizedText;
             itmObj.itemType = builder.itemEnum;
             if (builder.itemEnumName != "")
-                itmObj.itemType = EnumExtensions.ExtendEnum<Items>(builder.itemEnumName);
+            {
+                if (EnumExtensions.EnumWithExtendedNameExists<Items>(builder.itemEnumName))
+                    itmObj.itemType = EnumExtensions.GetFromExtendedName<Items>(builder.itemEnumName);
+                else
+                    itmObj.itemType = EnumExtensions.ExtendEnum<Items>(builder.itemEnumName);
+            }
 
             itmObj.itemSpriteSmall = builder.smallSprite;
             itmObj.itemSpriteLarge = builder.largeSprite;
@@ -63,6 +68,10 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
             return itmObj;
         }
 
+        /// <summary>
+        /// Builds the item as a <c>CaudexMultiItemObject</c>, acting as multi-use items.
+        /// </summary>
+        /// <param name="stateCount">The amount of times the item can be used.</param>
         public static CaudexMultiItemObject BuildAsMulti(this ItemBuilder builder, byte stateCount)
         {
             CaudexMultiItemObject itmObj = builder.Build<CaudexMultiItemObject>();

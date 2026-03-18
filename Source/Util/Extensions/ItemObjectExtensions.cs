@@ -44,6 +44,10 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
             return false;
         }
 
+        /// <summary>
+        /// Gets an item's name, respecting all overrides.
+        /// </summary>
+        /// <param name="localized">Whether to provide the localized name.</param>
         public static string GetName(this ItemObject itm, bool localized = true)
         {
             if (itm.TryGetOverride(ref nameOverrides, localized, out string newVal))
@@ -55,6 +59,10 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
             return itm.nameKey;
         }
 
+        /// <summary>
+        /// Gets an item's description, respecting all overrides.
+        /// </summary>
+        /// <param name="localized">Whether to provide the localized name.</param>
         public static string GetDescription(this ItemObject itm, bool localized = true)
         {
             if (itm.TryGetOverride(ref descOverrides, localized, out string newVal))
@@ -66,6 +74,10 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
             return itm.descKey;
         }
 
+        /// <summary>
+        /// Checks whether to cancel the item's removal from the inventory if its instantiated <c>Item</c> returns true.
+        /// </summary>
+        /// <param name="im">A reference to the player's ItemManager.</param>
         public static bool OverrideUseResult(this ItemObject itm, ItemManager im)
         {
             if (itm is CaudexItemObject cItm)
@@ -74,6 +86,10 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
             return false;
         }
 
+        /// <summary>
+        /// Assigns an <c>Item</c> to all items in the same metadata.
+        /// </summary>
+        /// <param name="func">The <c>Item</c> component reference.</param>
         public static void SetFunctionAcrossMeta(this ItemObject itm, Item func)
         {
             foreach (ItemObject itmObj in itm.GetMeta().itemObjects)
