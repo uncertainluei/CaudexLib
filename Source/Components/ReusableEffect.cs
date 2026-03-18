@@ -80,11 +80,11 @@ namespace UncertainLuei.CaudexLib.Components
                 effect.Deactivate();
         }
 
-        public static void RemoveReusableEffect<T>(this PlayerManager plyr, float time) where T : ReusableEffect
+        public static void RemoveReusableEffect<T>(this PlayerManager plyr) where T : ReusableEffect
             => DeactivateReusableEffect<T>(plyr.gameObject);
-        public static void RemoveReusableEffect<T>(this NPC npc, float time) where T : ReusableEffect
+        public static void RemoveReusableEffect<T>(this NPC npc) where T : ReusableEffect
             => DeactivateReusableEffect<T>(npc.gameObject);
-        public static void RemoveReusableEffect<T>(this Entity ent, float time) where T : ReusableEffect
+        public static void RemoveReusableEffect<T>(this Entity ent) where T : ReusableEffect
             => DeactivateReusableEffect<T>(ent.gameObject);
     }
 

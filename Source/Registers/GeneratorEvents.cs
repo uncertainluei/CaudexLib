@@ -5,7 +5,7 @@ using MTM101BaldAPI;
 
 namespace UncertainLuei.CaudexLib.Registers
 {
-    public enum CaudexGeneratorEventType
+    public enum CaudexGeneratorEventType : byte
     {
         /// <summary>
         /// Runs when the generator starts.
@@ -19,7 +19,7 @@ namespace UncertainLuei.CaudexLib.Registers
         NpcPrep, // runs after getting NPCs from levelobject
 
         /// <summary>
-        /// Runs when all generator actions.
+        /// Runs when the generator is complete.
         /// </summary>
         Finalizer // runs when the generator is pretty much complete
     }

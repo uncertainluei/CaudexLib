@@ -12,6 +12,7 @@ using MTM101BaldAPI.Registers;
 using System;
 using System.Collections;
 using System.Linq;
+using System.Reflection;
 using UncertainLuei.CaudexLib.Components;
 using UncertainLuei.CaudexLib.Registers;
 using UncertainLuei.CaudexLib.Util;
@@ -27,10 +28,16 @@ namespace UncertainLuei.CaudexLib
     [BepInAutoPlugin(ModGuid, "Caudex Lib")]
     [BepInDependency(ApiGuid, "11.0.0.2")]
     [BepInDependency("thinkerAPI", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency(VideoStartGuid, BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency(Ps1IntroGuid, BepInDependency.DependencyFlags.SoftDependency)]
     public partial class CaudexLibPlugin : BaseUnityPlugin
     {
         internal const string ModGuid = "io.github.uncertainluei.caudexlib";
         private const string ApiGuid = "mtm101.rulerp.bbplus.baldidevapi";
+
+        private const string VideoStartGuid = "dulsoda9.bbplus.videoreplacelogo";
+        private const string Ps1IntroGuid = "alexbw145.baldiplus.ps1basedintro";
+
 
         internal static CaudexLibPlugin Plugin { get; private set; }
         internal static ManualLogSource Log { get; private set; }
@@ -62,17 +69,13 @@ namespace UncertainLuei.CaudexLib
 
         private IEnumerator Init()
         {
-            bool displayLogos = false;
             SceneTimer timer = FindObjectOfType<SceneTimer>();
-            if (timer && customSplashScreen.Value)
-            {
-                displayLogos = true;
-                timer.enabled = false;
-            }
+            timer.enabled = false;
 
             // Wait until the BepInEx Chainloader is done loading
             Type chainloader = typeof(Chainloader);
             yield return new WaitUntil(() => AccessTools.StaticFieldRefAccess<bool>(chainloader, "_loaded"));
+            SplashLogos.CheckForDisable();
 
             try
             {
@@ -94,7 +97,7 @@ namespace UncertainLuei.CaudexLib
                 CauseDelayedCrash(Info, e);
             }
 
-            if (displayLogos)
+            if (timer)
                 timer.StartLogoDisplay();
         }
 

@@ -1,5 +1,9 @@
-﻿using System.Collections;
+﻿using HarmonyLib;
+
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,6 +13,17 @@ namespace UncertainLuei.CaudexLib.Registers
 {
     public static class SplashLogos
     {
+        private static bool _disabled = false;
+        internal static void CheckForDisable()
+        {
+            MethodInfo startMethod = AccessTools.Method(typeof(SceneTimer), "Start");
+            if (PatchProcessor.GetAllPatchedMethods().FirstOrDefault(x => x == startMethod) != null)
+            {
+                CaudexLibPlugin.Log.LogInfo("Patch(es) to SceneTimer found! Force-disabling custom splash screens");
+                _disabled = true;
+            }
+        }
+
         public static void AddLogo(Texture2D tex, Vector2 size, float dur = 2.5f)
         {
             logos.Add(new(tex, size, dur));
@@ -45,12 +60,12 @@ namespace UncertainLuei.CaudexLib.Registers
 
         internal static void StartLogoDisplay(this SceneTimer timer)
         {
-            if (logos.Count == 0)
+            if (_disabled || !CaudexLibPlugin.customSplashScreen.Value || logos.Count == 0)
             {
                 timer.enabled = true;
                 return;
             }
-            
+
             timer.StartCoroutine(DisplayLogos(timer));
         }
 

@@ -28,7 +28,7 @@ namespace UncertainLuei.CaudexLib.Patches
             return false;
         }
 
-        [HarmonyPatch("OnGenerationFinished"), HarmonyPatch("OnPlayerEnter"), HarmonyPatch("OnPlayerExit"), HarmonyTranspiler]
+        [HarmonyPatch("OnGenerationFinished"), HarmonyPatch("OnPlayerEnter"), HarmonyPatch("OnPlayerExit"), HarmonyPriority(Priority.First+1), HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> WipeAllButBaseCall(IEnumerable<CodeInstruction> instructions)
         {
             bool patched = false;
@@ -52,7 +52,7 @@ namespace UncertainLuei.CaudexLib.Patches
             yield break;
         }
 
-        [HarmonyPatch("OnGenerationFinished"), HarmonyPostfix]
+        [HarmonyPatch("OnGenerationFinished"), HarmonyPriority(Priority.First), HarmonyPostfix]
         private static void OnGenerationFinished(SilenceRoomFunction __instance)
         {
             // ACTUALLY account the silence cells field
@@ -62,10 +62,10 @@ namespace UncertainLuei.CaudexLib.Patches
                 cell.SetSilence(value: true);
         }
 
-        [HarmonyPatch("OnPlayerEnter"), HarmonyPostfix]
+        [HarmonyPatch("OnPlayerEnter"), HarmonyPriority(Priority.First), HarmonyPostfix]
         private static void OnPlayerEnter(PlayerManager player) => player.GetComponent<PlayerSilenceManager>().Silence(true);
 
-        [HarmonyPatch("OnPlayerExit"), HarmonyPostfix]
+        [HarmonyPatch("OnPlayerExit"), HarmonyPriority(Priority.First), HarmonyPostfix]
         private static void OnPlayerExit(PlayerManager player) => player.GetComponent<PlayerSilenceManager>().Silence(false);
     }
 }
