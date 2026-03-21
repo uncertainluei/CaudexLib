@@ -16,8 +16,8 @@ namespace UncertainLuei.CaudexLib.Patches
             LightmapModHolder._instances.Add(__instance, holder);
         }
 
-        [HarmonyPatch(typeof(LightController), "UpdateLighting"), HarmonyPostfix]
-        private static void LightingUpdatePostfix(LightController __instance, ref Color ___color, ref float ___level)
+        [HarmonyPatch(typeof(LightingController), "UpdateLighting"), HarmonyPostfix]
+        private static void LightingUpdatePostfix(LightingController __instance, ref Color ___color, ref float ___level)
         {
             LightmapModHolder holder = LightmapModHolder.GetInstance(__instance.ec);            
             if (holder == null) return;
