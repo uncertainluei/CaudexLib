@@ -15,8 +15,6 @@ namespace UncertainLuei.CaudexLib.Patches
     [HarmonyPatch(typeof(LevelBuilder))]
     static class LevelBuilderPatches
     {
-        private static readonly MethodInfo invokeEventMethod = AccessTools.Method(typeof(CaudexGeneratorEvents), "Invoke");
-
         [HarmonyPatch("AddNpcsFromPreviousLevels"), HarmonyPostfix]
         private static void AddSceneObjectNpcs(LevelBuilder __instance, SceneObject ___scene, LevelGenerationParameters ___ld, EnvironmentController ___ec)
         {
