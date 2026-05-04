@@ -30,6 +30,13 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
             return doorAssigner;
         }
 
+        public static SpecialRoomSwingingDoorsBuilder AddSpecialRoomDoors(this RoomFunctionContainer container, Door doorPrefab)
+        {
+            SpecialRoomSwingingDoorsBuilder specialDoorBuilder = container.AddFunction<SpecialRoomSwingingDoorsBuilder>();
+            specialDoorBuilder.swingDoorPre = doorPrefab;
+            return specialDoorBuilder;
+        }
+
         public static ChalkboardBuilderFunction AddChalkboardBuilder(this RoomFunctionContainer container, params WeightedPosterObject[] posters)
         {
             ChalkboardBuilderFunction chalkBuilder = container.AddFunction<ChalkboardBuilderFunction>();
@@ -39,6 +46,12 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
 
         public static ChalkboardBuilderFunction AddChalkboardBuilder(this RoomFunctionContainer container, PosterObject poster)
             => AddChalkboardBuilder(container, [poster.Weighted(100)]);
+
+        public static void AddBulkChalkboardBuilder(this RoomFunctionContainer container, PosterObject[] posters)
+        {
+            foreach (PosterObject pst in posters)
+                AddChalkboardBuilder(container, pst);
+        }
 
         public static SunlightRoomFunction AddSunlight(this RoomFunctionContainer container, Color lightColor)
         {

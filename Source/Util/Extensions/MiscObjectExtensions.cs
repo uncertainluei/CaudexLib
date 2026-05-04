@@ -1,4 +1,3 @@
-using UnityCipher;
 using UnityEngine;
 
 namespace UncertainLuei.CaudexLib.Util.Extensions

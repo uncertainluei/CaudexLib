@@ -8,15 +8,21 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
 {
     public static class WeightedHelperExtensions
     {
+        public static WeightedSelection<X> Weighted<X>(this X selection, int weight) where X : WeightedSelection<X>
+            => new() { selection = selection, weight = weight };
         public static T Weighted<X, T>(this X selection, int weight) where T : WeightedSelection<X>, new()
             => new() { selection = selection, weight = weight };
-        public static WeightedNPC Weighted(this NPC selection, int weight) => selection.Weighted<NPC, WeightedNPC>(weight);
-        public static WeightedRandomEvent Weighted(this RandomEvent selection, int weight) => selection.Weighted<RandomEvent, WeightedRandomEvent>(weight);
-        public static WeightedItemObject Weighted(this ItemObject selection, int weight) => selection.Weighted<ItemObject, WeightedItemObject>(weight);
-        public static WeightedPosterObject Weighted(this PosterObject selection, int weight) => selection.Weighted<PosterObject, WeightedPosterObject>(weight);
-        public static WeightedRoomAsset Weighted(this RoomAsset selection, int weight) => selection.Weighted<RoomAsset, WeightedRoomAsset>(weight);
+
         public static WeightedGameObject Weighted(this GameObject selection, int weight) => selection.Weighted<GameObject, WeightedGameObject>(weight);
         public static WeightedTransform Weighted(this Transform selection, int weight) => selection.Weighted<Transform, WeightedTransform>(weight);
+
+        public static WeightedItemObject Weighted(this ItemObject selection, int weight) => selection.Weighted<ItemObject, WeightedItemObject>(weight);
+        public static WeightedLevelObject Weighted(this LevelObject selection, int weight) => selection.Weighted<LevelObject, WeightedLevelObject>(weight);
+        public static WeightedNPC Weighted(this NPC selection, int weight) => selection.Weighted<NPC, WeightedNPC>(weight);
+        public static WeightedPosterObject Weighted(this PosterObject selection, int weight) => selection.Weighted<PosterObject, WeightedPosterObject>(weight);
+        public static WeightedRandomEvent Weighted(this RandomEvent selection, int weight) => selection.Weighted<RandomEvent, WeightedRandomEvent>(weight);
+        public static WeightedRoomAsset Weighted(this RoomAsset selection, int weight) => selection.Weighted<RoomAsset, WeightedRoomAsset>(weight);
+        public static WeightedSticker Weighted(this Sticker selection, int weight) => new(selection, weight);
 
         // Done for future-proofing
         public static int GetNpcWeight(this ICollection<WeightedNPC> collection, Character characterToCopy, int fallback = -1)

@@ -113,8 +113,7 @@ namespace UncertainLuei.CaudexLib.Patches
         // If there are any BepInEx/Harmony professionals who know how to check for out parameters any other way, then tell me ASAP.
         private static readonly object randomlyPlace = AccessTools.FirstMethod(typeof(LevelGenerator), (method) =>
         {
-            if (method.Name != "RandomlyPlaceRoom")
-                return false;
+            if (method.Name != "RandomlyPlaceRoom") return false;
 
             ParameterInfo[] parameters = method.GetParameters();
             return parameters.Length == 3 && parameters[2].IsOut;
