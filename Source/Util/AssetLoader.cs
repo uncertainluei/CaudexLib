@@ -64,7 +64,8 @@ namespace UncertainLuei.CaudexLib.Util
             if (assembly == null)
                 throw new ArgumentNullException("assembly");
             
-            return DeserializeLocalization(assembly.GetManifestResourceStream(path).ToTextString());
+            Stream stream = assembly.GetManifestResourceStream(path) ?? throw new FileNotFoundException($"Embedded resource ${path} in assembly '{assembly.FullName}'");
+            return DeserializeLocalization(stream.ToTextString());
         }
 
         // Vanilla localization equivalent
@@ -73,9 +74,10 @@ namespace UncertainLuei.CaudexLib.Util
             if (assembly == null)
                 throw new ArgumentNullException("assembly");
 
+            Stream stream = assembly.GetManifestResourceStream(path) ?? throw new FileNotFoundException($"Embedded resource ${path} in assembly '{assembly.FullName}'");
             try
             {
-                LocalizationData localizationData = JsonUtility.FromJson<LocalizationData>(assembly.GetManifestResourceStream(path).ToTextString());
+                LocalizationData localizationData = JsonUtility.FromJson<LocalizationData>(stream.ToTextString());
                 Dictionary<string, string> localizedText = [];
                 foreach (LocalizationItem item in localizationData.items)
                 {
@@ -112,7 +114,6 @@ namespace UncertainLuei.CaudexLib.Util
         {
             if (stream == null)
             {
-                if (closeStream) stream.Close();
                 throw new ArgumentNullException("stream");
             }
 

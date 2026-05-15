@@ -71,6 +71,7 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
         /// <summary>
         /// Builds the item as a <c>CaudexMultiItemObject</c>, acting as multi-use items.
         /// </summary>
+        /// <param name="builder">The <c>ItemBuilder</c> used to build the item.</param>
         /// <param name="stateCount">The amount of times the item can be used.</param>
         public static CaudexMultiItemObject BuildAsMulti(this ItemBuilder builder, byte stateCount)
         {

@@ -114,7 +114,7 @@ namespace UncertainLuei.CaudexLib
         {
             yield return 1;
             yield return "Error found! Crashing...";
-            MTM101BaldiDevAPI.CauseCrash(plugin, e);
+            throw e;
         }
 
         /*

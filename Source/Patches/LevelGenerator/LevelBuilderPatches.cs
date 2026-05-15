@@ -74,6 +74,7 @@ namespace UncertainLuei.CaudexLib.Patches
 
             if (scene == builder.scene) // "scene" refers to the foreach scene variable, while "source" means the argument variable
             {
+                if (builder.ld is not CustomLevelGenerationParameters) return;
                 AddForcedNpcsFromLevelParams(builder);
                 return;
             }
@@ -81,10 +82,14 @@ namespace UncertainLuei.CaudexLib.Patches
             try { _levelObject = scene.GetCurrentCustomLevelObject(); } // Store for later use
             catch (InvalidCastException) // Only catch invalid cast exceptions
             {
-                CaudexLibPlugin.Log.LogWarning($"SceneObject \"{scene.name}\" contains non-API LevelObjects! Skipping adding Caudex attributes...");
+                CaudexLibPlugin.Log.LogWarning($"SceneObject \"{scene.name}\" contains non-MTMAPI LevelObjects! Skipping adding Caudex attributes...");
                 return;
             }
-            catch (Exception e) { throw e; }
+            catch (Exception e) {
+                CaudexLibPlugin.Log.LogError($"SceneObject \"{scene.name}\" contains invalid LevelObject! Exception: {e}");
+                return;
+            }
+            if (!_levelObject) return;
 
             List<NPC> forcedNpcsInclusive = _levelObject.GetForcedNpcsInclusive(false);
             if (forcedNpcsInclusive == null) return;
@@ -106,6 +111,7 @@ namespace UncertainLuei.CaudexLib.Patches
         {
             if (scene == builder.scene) // "scene" refers to the foreach scene variable, while "source" means the argument variable
             {
+                if (builder.ld is not CustomLevelGenerationParameters) return;
                 AddPotentialNpcsFromLevelParams((CustomLevelGenerationParameters)builder.ld, npcs);
                 return;
             }

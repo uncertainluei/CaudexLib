@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
+		<!--GenerateDocumentationFile>True</GenerateDocumentationFile-->
 		
 		<AssemblyName>UncertainLuei.$(MSBuildProjectName)</AssemblyName>
 		<RootNamespace>UncertainLuei.$(MSBuildProjectName)</RootNamespace>
@@ -12,7 +13,7 @@
 		
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<LangVersion>latest</LangVersion>
-		<NoWarn>1701;1702;IDE0017;IDE0051</NoWarn>
+		<NoWarn>1591;1701;1702;IDE0017;IDE0051</NoWarn>
 
 		<RestoreAdditionalProjectSources>
 			https://api.nuget.org/v3/index.json;
@@ -23,7 +24,7 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="../Resources/Embedded/**/*">
-			<LogicalName>$([System.String]::new('%(RelativeDir)').Replace('/','/').Substring(22))%(FileName)%(Extension)</LogicalName>
+			<LogicalName>$([System.String]::new('%(RelativeDir)').Replace('\','/').Substring(22))%(FileName)%(Extension)</LogicalName>
 		</EmbeddedResource>
 	</ItemGroup>
 	
