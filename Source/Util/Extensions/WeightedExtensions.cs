@@ -23,6 +23,7 @@ namespace UncertainLuei.CaudexLib.Util.Extensions
         public static WeightedRandomEvent Weighted(this RandomEvent selection, int weight) => selection.Weighted<RandomEvent, WeightedRandomEvent>(weight);
         public static WeightedRoomAsset Weighted(this RoomAsset selection, int weight) => selection.Weighted<RoomAsset, WeightedRoomAsset>(weight);
         public static WeightedSticker Weighted(this Sticker selection, int weight) => new(selection, weight);
+        public static WeightedStructureWithParameters Weighted(this StructureWithParameters selection, int weight) => selection.Weighted<StructureWithParameters, WeightedStructureWithParameters>(weight);
 
         // Done for future-proofing
         public static int GetNpcWeight(this ICollection<WeightedNPC> collection, Character characterToCopy, int fallback = -1)

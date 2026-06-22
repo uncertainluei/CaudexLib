@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Reflection;
 
-using UncertainLuei.CaudexLib.Registers;
 using MTM101BaldAPI;
 using UncertainLuei.CaudexLib.Util.Extensions;
 
