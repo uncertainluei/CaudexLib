@@ -20,7 +20,7 @@ namespace UncertainLuei.CaudexLib.Patches
         private static void LightingUpdatePostfix(LightingController __instance, ref Color ___color, ref float ___level)
         {
             LightmapModHolder holder = LightmapModHolder.GetInstance(__instance.ec);            
-            if (holder == null) return;
+            if (!holder) return;
             holder.Invoke(ref ___color);
             ___color.r = Mathf.Clamp(___color.r, 0, 1);
             ___color.g = Mathf.Clamp(___color.g, 0, 1);
