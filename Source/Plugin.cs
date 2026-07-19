@@ -26,7 +26,7 @@ namespace UncertainLuei.CaudexLib
 {
     [BepInAutoPlugin(ModGuid, "Caudex Lib")]
     [BepInDependency(ApiGuid, "11.1")]
-    //[BepInDependency("thinkerAPI", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("thinkerAPI", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency(VideoStartGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency(Ps1IntroGuid, BepInDependency.DependencyFlags.SoftDependency)]
     public partial class CaudexLibPlugin : BaseUnityPlugin

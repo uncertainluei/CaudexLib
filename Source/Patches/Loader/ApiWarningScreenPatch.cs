@@ -5,7 +5,7 @@ using HarmonyLib;
 using MTM101BaldAPI;
 using MTM101BaldAPI.Patches;
 
-// using ThinkerAPI;
+using ThinkerAPI;
 
 using UnityEngine;
 
@@ -30,10 +30,10 @@ namespace UncertainLuei.CaudexLib.Patches
             __0.textBox.color = Color.clear;
             __0.audSource.Stop();
 
-            /* if (Chainloader.PluginInfos.ContainsKey("thinkerAPI"))
+            if (Chainloader.PluginInfos.ContainsKey("thinkerAPI"))
                 __0.StartCoroutine(LoadSceneDelayedThinkerApi(__0.scene));
-               else */
-            __0.StartCoroutine(LoadSceneDelayed(__0.scene));
+            else
+                __0.StartCoroutine(LoadSceneDelayed(__0.scene));
             return false;
         }
 
@@ -43,10 +43,10 @@ namespace UncertainLuei.CaudexLib.Patches
             AdditiveSceneManager.Instance.LoadScene(target);
         }
 
-        /*private static IEnumerator LoadSceneDelayedThinkerApi(string target)
+        private static IEnumerator LoadSceneDelayedThinkerApi(string target)
         {
             yield return new WaitWhile(() => AdditiveSceneManager.Instance.Busy || thinkerAPI.warningScreenBlockers > 0 || thinkerAPI.givemeaheadstart);
             AdditiveSceneManager.Instance.LoadScene(target);
-        }*/
+        }
     }
 }
